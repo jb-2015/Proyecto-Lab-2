@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Personal</title>
+    <%- include('imports/imports.ejs') %>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true,menu:false,value:"Acceso Personal"}) %>
+    </header>
+    <main>
+        <div class="tContainer">
+			<div class="r">
+				<div class="c2">
+					<img src="images/laboratorio.png" alt="" class="logo-l">
+				</div>
+				<div class="c2" id="frm-personal">
+					<div class="r center">
+						<div class="c3 f-column ">
+							<input type="text" placeholder="Ingrese su DNI" name="dni" id="dni">
+							<input type="password" placeholder="ingrese su clave" name="clave" id="clave">
+							<button id="entrar-personal">Entrar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </main>
+    <footer></footer>
+</body>
+</html>

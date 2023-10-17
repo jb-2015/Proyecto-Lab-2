@@ -1,0 +1,33 @@
+
+
+*{
+	font-family: sans-serif;
+}
+
+header{
+	top: 0px;
+	height: 100px;
+	width: 100%;
+	position: fixed;
+	display: flex;
+	flex-direction: row;	
+	justify-content: space-around;
+	background: linear-gradient(90deg,#055582 5%,#1db3d4 40%,#68c4e5 85%,white 100%)
+}
+
+header>.c1>*{
+	margin: auto;
+}
+
+#menu-nav>ul{
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	gap:15px;
+	font-size: 19px;
+	font-weight: bold;
+}
+
+
+
+

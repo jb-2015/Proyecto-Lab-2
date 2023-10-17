@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login Paciente</title>
+	<%- include('imports/imports.ejs')%>
+</head>
+<body>
+	<header>
+		<%- include('parcial/nav',{logo:true,titulo:true,value:'Inicio session paciente', menu:false}) %>
+	</header>
+	<main>
+		<div class="tContainer">
+			<div class="r">
+				<div class="c2">
+					<img src="images/laboratorio.png" alt="" class="logo-l">
+				</div>
+				<div class="c2" id="frm-paciente">
+					<div class="r center">
+						<div class="c3 f-column ">
+							<input type="text" placeholder="Ingrese su DNI" name="dni-paciente" id="dni-paciente">
+							<input type="password" placeholder="ingrese su clave" name="clave-paciente" id="clave-paciente">
+							<button id="entrar-paciente">Entrar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer></footer>
+</body>
+</html>

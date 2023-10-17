@@ -1,0 +1,33 @@
+.op-home{
+	height: 300px;
+	overflow:hidden;
+}
+.op-home>div{
+	    display: flex;
+    margin-left: -100%;
+    margin-block-start: auto;
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: lightblue;
+    box-shadow: 5px 5px 7px black;
+    font-size: 28px;
+    background: linear-gradient(90deg,#055582 1%,#1db3d4 40%,#68c4e5 85%);
+    font-weight: bold;
+    color: white;
+    align-items: center;
+    justify-content: center;
+}
+
+.op-img{
+	width: 100%;
+	transition: all .5s ease;
+	
+
+}
+.op-home:hover .op-img{
+	width: 120%;
+	
+	margin:auto;
+}

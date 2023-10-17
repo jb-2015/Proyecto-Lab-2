@@ -1,0 +1,14 @@
+#frm-paciente{
+    background: url(../images/fondo-frm-paciente.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    
+}
+#frm-personal{
+    background: url(../images/personal-fondo.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
