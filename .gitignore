@@ -9,3 +9,4 @@ npm-debug.log
 # Ignora archivos de configuración específicos del sistema
 .DS_Store
 Thumbs.db
+config-db.js

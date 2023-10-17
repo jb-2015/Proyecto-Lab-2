@@ -5,30 +5,43 @@ class Persona extends Model {}
 
 Persona.init(
     {
-        id_persona :{
-            type:DataTypes.STRING,
-            allowNull: false
-        },
-        nombre:{
-            type:DataTypes.STRING,
-            allowNull: false
-        },
-        apellido:{
+        id_persona: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true, // Si es una clave primaria autoincremental
+          },
+          nombre: {
             type: DataTypes.STRING,
-            allowNull:false
-        },
-        dni:{
-            type:DataTypes.BIGINT,
-            allowNull:false
-        },
-        fecha_nacimiento: {
+            allowNull: false,
+          },
+          apellido: {
+            type: DataTypes.STRING,
+            allowNull: false,
+          },
+          dni: {
+            type: DataTypes.BIGINT,
+          },
+          fecha_nacimiento: {
             type: DataTypes.DATE,
-            allowNull: false
-        }
+          },
+          genero: {
+            type: DataTypes.STRING,
+          },
+          direccion: {
+            type: DataTypes.STRING,
+          },
+          tel: {
+            type: DataTypes.STRING,
+          },
+          email: {
+            type: DataTypes.STRING,
+          },
 
     },
     {
         sequelize,
-        modelName: 'persona',
+        modelName: 'Persona',
       }
 )
+
+export default Persona

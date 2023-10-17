@@ -34,5 +34,9 @@ router.get("/page-administrativo",(req,res)=>{
 	res.render("page-administrativo")	
 })
 
+router.get("/crear-persona",(req,res)=>{
+	
+})
+
 
 export default router

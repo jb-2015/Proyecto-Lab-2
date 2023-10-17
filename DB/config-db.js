@@ -1,5 +1,5 @@
 export const dev= {
     user:"root",
     password:"",
-    database:"labo"
+    database:"sis_lab"
 }
