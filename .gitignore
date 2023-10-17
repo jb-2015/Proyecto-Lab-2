@@ -1,0 +1,11 @@
+# Ignora directorios generados por Node.js
+node_modules/
+npm-debug.log
+
+# Ignora archivos generados por editores de código
+.vscode/
+.idea/
+
+# Ignora archivos de configuración específicos del sistema
+.DS_Store
+Thumbs.db
