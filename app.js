@@ -14,9 +14,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 */
-app.set('views',path.join(__dirname,'views'))
+
 app.set('view engine','ejs')
-app.use(indexRouter)
+app.set('views',path.join(__dirname,'views'))
+//app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/',indexRouter)
 //app.use(indexRouter2)
 app.listen(3030,()=>{
 	console.log("Servidor iniciado en el puerto 3030")

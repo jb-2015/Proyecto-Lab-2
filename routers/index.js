@@ -33,11 +33,13 @@ const router = express.Router();
   router.get("/page-administrativo",(req,res)=>{
     res.render("page-administrativo")	
   })
-  router.get("/panel-paciente",(req,res)=>{
-      res.render('panelPaciente')
-  })
+  /*
+  router.get('/panel-te', (req, res) => {
+
+    res.render('panelPaciente');
+  });
   
- 
+ */
   
 
 

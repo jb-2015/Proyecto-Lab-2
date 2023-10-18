@@ -27,19 +27,19 @@ const Persona = sequelize.define('Persona', {
     allowNull: true,
   },
   genero: {
-    type: DataTypes.CHAR(1), // Ajustado a la longitud de la columna en la base de datos
+    type: DataTypes.CHAR(1),
     allowNull: true,
   },
   direccion: {
-    type: DataTypes.STRING(100), // Ajustado a la longitud de la columna en la base de datos
+    type: DataTypes.STRING(100), 
     allowNull: true,
   },
   tel: {
-    type: DataTypes.STRING(20), // Ajustado a la longitud de la columna en la base de datos
+    type: DataTypes.STRING(20),
     allowNull: true,
   },
   email: {
-    type: DataTypes.STRING(70), // Ajustado a la longitud de la columna en la base de datos
+    type: DataTypes.STRING(70),
     allowNull: true,
   },
 }, {

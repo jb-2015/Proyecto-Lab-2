@@ -78,7 +78,7 @@ const findByNombre = async (req, res) => {
   }
 };
 
-const findByDni = async (req, res) => {
+const renderDni = async (req, res) => {
   const { dni } = req.params;
   try {
     const persona = await Persona.findOne({
@@ -87,18 +87,41 @@ const findByDni = async (req, res) => {
       },
     });
     if (persona) {
+     res.render('panelPaciente',{ persona })
+      //res.json(persona);
+      
+    } else {
+      res.status(404).json({ error: 'Persona no encontrada' });
+      //res.send(false)
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+/*
+const findByDni = async (dni) => {
+  
+  try {
+    const persona = await Persona.findOne({
+      where: {
+        dni: dni,
+      },
+    });
+    if (persona) {
       //res.render('panelPaciente',{personas:persona})
-      res.json(persona);
+      //console.log(persona)
+     return persona;
       
     } else {
       //res.status(404).json({ error: 'Persona no encontrada' });
-      res.send(false)
+      return false;
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+*/
 const findByApellido = async (req, res) => {
   const { apellido } = req.params;
   try {
@@ -173,13 +196,14 @@ const tabla = async (req, res) => {
 
 
 module.exports = {
+  renderDni,
   list,
   create,
   update,
   remove,
   findById,
   findByNombre,
-  findByDni,
+  //findByDni,
   findByApellido,
   findByEmail,
   obtenerCantidadTotal,
