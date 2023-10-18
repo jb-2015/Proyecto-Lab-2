@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize');
 
 
 
-    const sequelize = new Sequelize('bd_sistlab', 'root', 'hola123', {
+    const sequelize = new Sequelize('bd_sistlab', 'rootear', 'hola123', {
       host: 'localhost',
       dialect: 'mysql',
     },{

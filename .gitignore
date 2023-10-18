@@ -1,6 +1,6 @@
 # Ignora directorios generados por Node.js
 node_modules/
-config/
+config
 npm-debug.log
 
 
