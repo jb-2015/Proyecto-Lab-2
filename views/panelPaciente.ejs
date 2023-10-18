@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/template-css.css">
-<link rel="stylesheet" href="/css/home.css">
-<link rel="stylesheet" href="/css/login-paciente.css">
-<link rel="stylesheet" href="/css/page-datos-paciente.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
     <title>Panel Paciente</title>
-    <%- include('imports/imports.ejs') %>
+    <%- include('imports/imports') %>
 </head>
 <body>
     <header>
@@ -21,18 +16,25 @@
         <div class="tContainer">
             <div class="r">
                 <div class="c4" id="datos-paciente">
-                    <form id="formulario-datos" class="w-75 mx-auto d-flex flex-column align-items-center mt-5 ">
-                        <div class="container">
-                            <p>Nombre: <%= persona.nombre %></p>
-                            <p>Apellido: <%= persona.apellido %></p>
-                            <p>DNI: <%= persona.dni %></p>
-                            <p>Fecha de Nacimiento: <%= persona.fecha_nacimient %></p>
-                            <p>Género: <%= persona.genero %></p>
-                            <p>Dirección: <%= persona.direccion %></p>
-                            <p>Teléfono: <%= persona.tel %></p>
-                            <p>Email: <%= persona.email %></p>
-                             </div>
-                    </form>
+                    
+                        <div class="tContainer">
+                            <div class="r">
+                                <div class="c3">
+                                    <form action="" id="frm-datos-paciente" class="f-column">
+                                        <input type="text" value="<%= persona.nombre %>">
+                                        <input type="text" value="<%= persona.apellido %>">
+                                        <input type="date" value="<%= persona.fecha_nacimient%>">
+                                        <input type="text" value="<%= persona.genero %>">
+                                        <input type="text" value="<%= persona.direccion %>">
+                                        <input type="text" value="<%= persona.tel %>">
+                                        <input type="text" value="<%= persona.email %>">
+                                        <button type="submit">Actualizar</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
                 </div>
             </div>
         </div>

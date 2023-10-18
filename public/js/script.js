@@ -27,6 +27,7 @@ btn_buscarP.addEventListener('click',()=>{
 
 
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario-datos');
     const nombreInput = document.getElementById('nombre');
