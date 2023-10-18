@@ -1,6 +1,8 @@
 # Ignora directorios generados por Node.js
 node_modules/
+config/
 npm-debug.log
+
 
 # Ignora archivos generados por editores de código
 .vscode/
