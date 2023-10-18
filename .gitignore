@@ -12,3 +12,5 @@ npm-debug.log
 .DS_Store
 Thumbs.db
 config-db.js
+config.json
+database.js
