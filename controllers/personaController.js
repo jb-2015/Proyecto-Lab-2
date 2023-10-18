@@ -87,9 +87,12 @@ const findByDni = async (req, res) => {
       },
     });
     if (persona) {
+      //res.render('panelPaciente',{personas:persona})
       res.json(persona);
+      
     } else {
-      res.status(404).json({ error: 'Persona no encontrada' });
+      //res.status(404).json({ error: 'Persona no encontrada' });
+      res.send(false)
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

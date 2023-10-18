@@ -6,6 +6,8 @@ const express = require('express');
 const router = express.Router();
 
 
+
+
   
   router.use(express.static("public"))
   router.use("/css",express.static('public/css'))
@@ -31,10 +33,11 @@ const router = express.Router();
   router.get("/page-administrativo",(req,res)=>{
     res.render("page-administrativo")	
   })
-  
-  router.get("/crear-persona",(req,res)=>{
-    
+  router.get("/panel-paciente",(req,res)=>{
+      res.render('panelPaciente')
   })
+  
+ 
   
 
 
