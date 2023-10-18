@@ -1,10 +1,46 @@
 
+
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const express = require('express');
 const router = express.Router();
 
+
+  
+  router.use(express.static("public"))
+  router.use("/css",express.static('public/css'))
+  router.use("/js",express.static('public/js'))
+  router.use("/images",express.static('public/images'))
+  
+  router.use(morgan('dev'))
+  router.use(bodyParser.json())
+  router.use(bodyParser.urlencoded({extended:false}))
+  
+  
+  
+  
+  router.get("/",(req,res)=>{
+    res.render("home")
+  })
+  router.get("/portal-paciente",(req,res)=>{
+    res.render("accesoPaciente")
+  })
+  router.get("/portal-personal",(req,res)=>{
+    res.render("accesoPersonal")
+  })
+  router.get("/page-administrativo",(req,res)=>{
+    res.render("page-administrativo")	
+  })
+  
+  router.get("/crear-persona",(req,res)=>{
+    
+  })
+  
+
+
+
+  ///Eduardo/////////////////////////////////////////////////////////////////
   const consultaController = require('../db/consulta');
-  
-  
   router.get('/pacienTec', consultaController.realizarConsulta);
   router.get('/orden/:id', consultaController.obtenerResultados);
   router.get('/nueva-orden', (req, res) => {
