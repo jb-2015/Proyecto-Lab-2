@@ -9,6 +9,8 @@ btn_personal.addEventListener('click',()=>{
     window.location.assign('/page-administrativo')
 })*/
 
+
+
 btn_buscarP.addEventListener('click',  ()=>{
   
     let valor = document.getElementById('dni-paciente-search').value   
