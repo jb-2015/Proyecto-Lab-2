@@ -5,16 +5,13 @@ const bodyParser = require('body-parser');
 const app = express();
 const consultas = require('./db/consulta');
 const indexRouter = require('./routers/index');
-//const indexRouter2 = require('./routers/handler.js');
+
 
 const cors = require('cors');
 
-
-
-// Habilitar CORS
 app.use(cors());
 
-// ... Resto de la configuración de tu servidor ...
+
 
 /*
 import { fileURLToPath } from 'url';
