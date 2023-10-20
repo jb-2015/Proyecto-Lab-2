@@ -13,7 +13,7 @@ const list = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    const { nombre, apellido, dni, fecha_nacimient, genero, direccion, tel, email } = req.body;
+    const { nombre, apellido, dni, fecha_nacimient, genero,embarazada, direccion, tel, email } = req.body;
 
   try {
     const persona = await Persona.create({
@@ -22,6 +22,7 @@ const create = async (req, res) => {
       dni,
       fecha_nacimient,
       genero,
+      embarazada,
       direccion,
       tel,
       email

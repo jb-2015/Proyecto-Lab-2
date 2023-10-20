@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:false})%>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Registrar paciente', menu:false})%>
     </header>
     <main>
         <div class="tContainer">
@@ -27,7 +27,21 @@
                         <input type="text" name="apellido" placeholder="Apellido" required>
                         <input type="number" name="dni" placeholder="DNI">
                         <input type="date" name="fecha_nacimient" placeholder="Fecha de Nacimiento">
-                        <input type="text" name="genero" placeholder="Género">
+                        <div class="sexSelect f-row">
+                            <label class="rad c2">
+                                <input type="radio" name="sexo" value="m"> Masculino
+                              </label>
+                            
+                              <label class="rad c2">
+                                <input type="radio" name="sexo" value="f" id="opFem"> Femenino
+                              </label>
+                        </div>
+                        <div id="CheckEmbarazada" class="oculto">
+                           <label >
+                                <input type="checkbox" name="embarazada" value="Embarazada">
+                                embarazada
+                           </label>
+                        </div>
                         <input type="text" name="direccion" placeholder="Dirección">
                         <input type="text" name="tel" placeholder="Teléfono">
                         <input type="email" name="email" placeholder="Email">
