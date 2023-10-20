@@ -115,7 +115,8 @@ const renderDni = async (req, res) => {
       //res.json(persona);
       
     } else {
-      res.status(404).json({ error: 'Persona no encontrada' });
+      //res.status(404).json({ error: 'Persona no encontrada' });
+      res.render("createPaciente")
       //res.send(false)
     }
   } catch (error) {
