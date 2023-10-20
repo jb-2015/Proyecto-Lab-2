@@ -1,11 +1,11 @@
-const frm = document.getElementById("frm-datos-paciente");
+const frm = document.getElementById("frm-nueva-persona");
 
 frm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const idPersonaInput = document.getElementById('id_persona').value;
     const nombreInput = document.getElementById('nombre').value;
     const apellidoInput = document.getElementById('apellido').value;
+    const dniInput = document.getElementById('dni').value;
     const fechaNacimientInput = document.getElementById('fecha_nacimient').value;
     const generoInput = document.getElementById('genero').value;
     const direccionInput = document.getElementById('direccion').value;
@@ -13,7 +13,7 @@ frm.addEventListener('submit', async function(e) {
     const emailInput = document.getElementById('email').value;
 
     try {
-        const response = await fetch(`/persona/update/${idPersonaInput}`, {
+        const response = await fetch('/persona/create', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,6 +21,7 @@ frm.addEventListener('submit', async function(e) {
             body: JSON.stringify({
                 nombre: nombreInput,
                 apellido: apellidoInput,
+                dni: dniInput,
                 fecha_nacimient: fechaNacimientInput,
                 genero: generoInput,
                 direccion: direccionInput,
@@ -32,10 +33,9 @@ frm.addEventListener('submit', async function(e) {
         const data = await response.json();
 
         if (response.ok) {
-
-            console.log('Datos actualizados correctamente:');
+            console.log('Persona creada correctamente:', data);
         } else {
-            console.error('Error al actualizar los datos:');
+            console.error('Error al crear persona:', data.error);
         }
     } catch (error) {
         console.error('Error:', error);

@@ -21,13 +21,14 @@
                             <div class="r">
                                 <div class="c3">
                                     <form action="" id="frm-datos-paciente" class="f-column">
-                                        <input type="text" value="<%= persona.nombre %>">
-                                        <input type="text" value="<%= persona.apellido %>">
-                                        <input type="date" value="<%= persona.fecha_nacimient%>">
-                                        <input type="text" value="<%= persona.genero %>">
-                                        <input type="text" value="<%= persona.direccion %>">
-                                        <input type="text" value="<%= persona.tel %>">
-                                        <input type="text" value="<%= persona.email %>">
+                                        <input type="hidden" id="id_persona" value="<%= persona.id_persona %>">
+                                        <input type="text" id="nombre" value="<%= persona.nombre %>">
+                                        <input type="text" id="apellido" value="<%= persona.apellido %>">
+                                        <input type="date" id="fecha_nacimient" value="<%= persona.fecha_nacimient%>">
+                                        <input type="text" id="genero" value="<%= persona.genero %>">
+                                        <input type="text" id="direccion" value="<%= persona.direccion %>">
+                                        <input type="text" id="tel" value="<%= persona.tel %>">
+                                        <input type="text" id="email" value="<%= persona.email %>">
                                         <button type="submit">Actualizar</button>
                                     </form>
                                 </div>
@@ -39,7 +40,7 @@
             </div>
         </div>
     </main>
-    <script src="/js/script.js"></script>
+    <script type="module" src="/js/actualizarPaciente.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

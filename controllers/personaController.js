@@ -13,25 +13,49 @@ const list = async (req, res) => {
 };
 
 const create = async (req, res) => {
+    const { nombre, apellido, dni, fecha_nacimient, genero, direccion, tel, email } = req.body;
+
   try {
-    const nuevaPersona = await Persona.create(req.body);
-    res.json(nuevaPersona);
+    const persona = await Persona.create({
+      nombre,
+      apellido,
+      dni,
+      fecha_nacimient,
+      genero,
+      direccion,
+      tel,
+      email
+    });
+    //res.render('panelPaciente',{ persona })
+    res.redirect(`/persona/panel-te/${dni}`);
+    //res.status(201).json({ message: 'Persona creada correctamente', persona });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 const update = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; // ID de la persona a actualizar
+  const { nombre, apellido, dni, fecha_nacimient, genero, direccion, tel, email } = req.body; // Nuevos datos
+
   try {
-    const [updatedRowsCount, updatedRows] = await Persona.update(req.body, {
-      where: { id_persona: id },
-      returning: true,
+    const updatedPersona = await Persona.update({
+      nombre,
+      apellido,
+      dni,
+      fecha_nacimient,
+      genero,
+      direccion,
+      tel,
+      email
+    }, {
+      where: { id_persona: id }
     });
-    if (updatedRowsCount === 0) {
-      res.status(404).json({ error: 'Persona no encontrada' });
+
+    if (updatedPersona[0] === 1) {
+      res.status(200).json({ message: 'Persona actualizada correctamente' });
     } else {
-      res.json(updatedRows[0]);
+      res.status(404).json({ error: 'Persona no encontrada' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -153,6 +177,7 @@ const findByEmail = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const obtenerCantidadTotal = async (req, res) => {
   try {
     const cantidadTotal = await Persona.count();
@@ -211,4 +236,3 @@ module.exports = {
   tabla,
 
 };
-

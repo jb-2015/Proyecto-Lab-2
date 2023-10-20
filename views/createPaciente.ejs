@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Persona</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <%- include('imports/imports') %>
+</head>
+<body>
+    <header>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:false})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4" id="datos-paciente">
+                    
+                        <div class="tContainer">
+                            <div class="r">
+                                <div class="c3">
+                    <form action="/persona/create" id="frm-datos-paciente" class="f-column" method="POST">
+                
+                        <input type="text" name="nombre" placeholder="Nombre" required>
+                        <input type="text" name="apellido" placeholder="Apellido" required>
+                        <input type="number" name="dni" placeholder="DNI">
+                        <input type="date" name="fecha_nacimient" placeholder="Fecha de Nacimiento">
+                        <input type="text" name="genero" placeholder="Género">
+                        <input type="text" name="direccion" placeholder="Dirección">
+                        <input type="text" name="tel" placeholder="Teléfono">
+                        <input type="email" name="email" placeholder="Email">
+                        <button type="submit">Añadir</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    
+</div>
+</div>
+</div>
+    </main>
+    <footer>
+        <!-- Pie de página si es necesario -->
+    </footer>
+    <script type="module" src="/js/createPaciente.js"></script>
+
+</body>
+</html>
