@@ -7,7 +7,7 @@ const personaController = require('../controllers/personaController');
 
 router.get('/', personaController.list);
 router.put('/update/:id', personaController.update);
-router.post('/create', personaController.create);
+router.put('/create', personaController.create);
 router.get('/remove/:id', personaController.remove);
 router.get('/id/:id', personaController.findById);
 router.get('/nombre/:nombre', personaController.findByNombre);
