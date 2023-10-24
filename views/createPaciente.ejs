@@ -21,12 +21,12 @@
                         <div class="tContainer">
                             <div class="r">
                                 <div class="c3">
-                    <form action="/persona/create" id="frm-datos-paciente" class="f-column" method="POST">
+                    <form action="" id="frm-datos-paciente" class="f-column" method="">
                 
-                        <input type="text" name="nombre" placeholder="Nombre" required>
-                        <input type="text" name="apellido" placeholder="Apellido" required>
-                        <input type="number" name="dni" placeholder="DNI">
-                        <input type="date" name="fecha_nacimient" placeholder="Fecha de Nacimiento">
+                        <input type="text" name="nombre" placeholder="Nombre" id="nombre" required>
+                        <input type="text" name="apellido" placeholder="Apellido" id="apellido" required>
+                        <input type="number" name="dni" placeholder="DNI" id="dni">
+                        <input type="date" name="fecha_nacimient" placeholder="Fecha de Nacimiento" id="fecha_nacimient">
                         <div class="sexSelect f-row">
                             <label class="rad c2">
                                 <input type="radio" name="sexo" value="m"> Masculino
@@ -38,13 +38,13 @@
                         </div>
                         <div id="CheckEmbarazada" class="oculto">
                            <label >
-                                <input type="checkbox" name="embarazada" value="Embarazada">
+                                <input type="checkbox" name="embarazada" value="Embarazada" id="embarazada">
                                 embarazada
                            </label>
                         </div>
-                        <input type="text" name="direccion" placeholder="Dirección">
-                        <input type="text" name="tel" placeholder="Teléfono">
-                        <input type="email" name="email" placeholder="Email">
+                        <input type="text" name="direccion" placeholder="Dirección" id="direccion">
+                        <input type="text" name="tel" placeholder="Teléfono" id="tel">
+                        <input type="email" name="email" placeholder="Email" id="email">
                         <button type="submit">Añadir</button>
                     </form>
                 </div>

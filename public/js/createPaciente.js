@@ -1,4 +1,4 @@
-const frm = document.getElementById("frm-nueva-persona");
+const frm = document.getElementById("frm-datos-paciente");
 
 const radios= document.getElementsByName('sexo')
 const fem  = document.getElementById('opFem')
