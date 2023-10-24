@@ -2,7 +2,19 @@ const  Persona  = require('../models/persona');
 
 const Pedido = require('../models/pedido');
 const Orden = require('../models/orden');
-const ordenController=require('./ordenController')
+const Analisis = require('../models/analisis')
+const ordenController=require('./ordenController');
+const { where } = require('sequelize');
+
+Persona.hasMany(Pedido, { foreignKey: 'id_persona',as: 'pedid' });
+Pedido.belongsTo(Persona, { foreignKey: 'id_persona', as: 'paci' });
+
+Pedido.hasMany(Orden, { foreignKey: 'id_pedido', as: 'ord' });
+Orden.belongsTo(Pedido, { foreignKey: 'id_pedido', as: 'pedOrd' });
+Orden.hasMany(Analisis, { foreignKey: 'id_analisis',as: 'analisisOrden' });
+
+
+
 const list = async (req, res) => {
   try {
     const persona = await Persona.findAll();
@@ -111,8 +123,36 @@ const renderDni = async (req, res) => {
         dni: dni,
       },
     });
-    if (persona) {
-     res.render('panelPaciente',{ persona })
+    
+    const ordenes = await Orden.findAll({
+      attributes: [
+        'id_orden',
+        'fecha_creacion',
+        'estado',
+        
+      ],
+      include: [{
+        model: Pedido,
+        as: 'pedOrd',
+        attributes:['id_persona','nombre_medico','nro_matricula'],
+        where:{
+          id_persona : persona.id_persona
+        }
+      },{
+        model: Analisis,
+        as: 'analisisOrden',
+        attributes: ['descripcion'],
+        as: 'analisis'
+      }]
+      
+    })
+    
+    
+
+
+
+    if (persona) {  
+     res.render('panelPaciente',{ persona, ordenes })
       //res.json(persona);
       
     } else {
@@ -124,6 +164,7 @@ const renderDni = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 /*
 const findByDni = async (dni) => {
   

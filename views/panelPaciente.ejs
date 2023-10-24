@@ -26,6 +26,25 @@
                                         <input type="text" id="apellido" value="<%= persona.apellido %>">
                                         <input type="date" id="fecha_nacimient" value="<%= persona.fecha_nacimient%>">
                                         <input type="text" id="genero" value="<%= persona.genero %>">
+
+                                        <% if(persona.genero=="f"||persona.genero=="F"){
+                                            %>
+                                            <div id="CheckEmbarazada">
+                                                <label >
+                                                    <input type="checkbox" name="embarazada" value="Embarazada" id="embarazada" checked="<% if(persona.embarazada){
+                                                        %> true <%
+                                                    }  else{
+                                                        %> false <%
+                                                    } %>">
+                                                    embarazada
+                                               </label>
+
+                                            </div>
+                                            
+                                            <%
+                                        } %>
+                                        
+                                        
                                         <input type="text" id="direccion" value="<%= persona.direccion %>">
                                         <input type="text" id="tel" value="<%= persona.tel %>">
                                         <input type="text" id="email" value="<%= persona.email %>">
@@ -35,6 +54,24 @@
                             </div>
                             
                         </div>
+                    
+                </div>
+            </div>
+            <div class="r">
+                <div class="c3 f-column">
+                    <%
+                        ordenes.forEach(o=>{
+                            %>
+                            <ul>
+                                <li><%=  o.id_orden  %></li>
+                                <li><%=  o.estado  %></li>
+                                <li><%=  o.fecha_creacion  %></li>
+                                <li><%= o.analisis.descripcion%></li>
+                            </ul>
+                            <%
+                        })
+                    %>
+                    
                     
                 </div>
             </div>
