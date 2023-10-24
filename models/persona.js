@@ -30,6 +30,10 @@ const Persona = sequelize.define('Persona', {
     type: DataTypes.CHAR(1),
     allowNull: true,
   },
+  embarazada:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    },
   direccion: {
     type: DataTypes.STRING(100), 
     allowNull: true,

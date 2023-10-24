@@ -74,6 +74,8 @@ frm.addEventListener('submit', async function(e) {
 
         if (response.ok) {
             console.log('Persona creada correctamente:', data);
+         
+            window.location.href = `/persona/panel-te/${dniInput}`;
         } else {
             console.error('Error al crear persona:', data.error);
         }

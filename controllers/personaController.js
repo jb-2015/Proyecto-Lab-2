@@ -28,8 +28,8 @@ const create = async (req, res) => {
       email
     });
     //res.render('panelPaciente',{ persona })
-    res.redirect(`/persona/panel-te/${dni}`);
-    //res.status(201).json({ message: 'Persona creada correctamente', persona });
+    //res.redirect(`/persona/panel-te/${dni}`);
+   res.status(201).json({ message: 'Persona creada correctamente', persona });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
