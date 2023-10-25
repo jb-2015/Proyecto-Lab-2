@@ -40,12 +40,13 @@
                                 <option value="">-- Seleccione analisis --</option>
                                 <% listAnalisis.forEach(a=>{
                                     %>
-                                    <option value=""><%= a.descripcion %></option>
+                                    <option value="<%= a.id_analisis %>"> <%= a.descripcion %></option>
                                     <%
                                 }) %>
                                 
                             </select>
                             <div class="r"><input type="date"></div>
+                            <button> Crear</button>
     
                         </form>
                     </div>
