@@ -6,6 +6,13 @@ const Examen = require('../models/examen');
 const Muestra = require('../models/muestra');
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
+
+/** PROBANDO */
+
+
+/*////////////////////////////////*/
+
+
 const list = async (req, res) => {
   try {
     const orden = await Orden.findAll();
@@ -38,8 +45,10 @@ const obtenerDatosOrdenes = async () => {
   }
 };
 
-const buscarPorId = (req, res) => {
+const buscarPorId =async (req, res) => {
   const { id } = req.params;
+
+  
   Orden.findOne({
     attributes: [],
     include: [
@@ -84,7 +93,7 @@ const buscarPorId = (req, res) => {
   .then(result => {
   
    // console.log(resultado);
-   res.render('ordenUnica', { resultados: result });
+   res.render('vistaOrden', { result });
    // res.json(resultado); // Agrega esta línea para enviar el resultado como respuesta
   })
   .catch(error => {
@@ -93,7 +102,51 @@ const buscarPorId = (req, res) => {
   });
 };
 
+const listarPorID = async (req,res)=>{
+    const {id}= req.params
 
+    const orden= await Orden.findOne({
+      attributes:['id_orden','estado','fecha_creacion'],
+      include:[ 
+        {
+          model:Pedido,
+          attributes:['diagnostico'],
+          include:[
+            {
+              model:Persona,
+              attributes:['nombre','apellido','dni'],
+              as:'persona'
+            }
+          ],
+          as : 'pedido'
+        },{
+          model:Analisis,
+          attributes:['descripcion','tipo'],
+          as:'analisis'
+        }
+      ],
+      where:{
+        id_orden: id
+      }
+    })
+    const muestras= await Muestra.findAll({
+      attributes:['tipo_muestra','entregado','fecha_recoleccion'],
+      include:[
+        {
+          model: Orden,
+          attributes:[],
+          as: 'orden'
+        }
+      ],
+      where:{
+        id_orden:id
+      }
+    })
+    if(orden){
+      res.render('vistaOrden',{orden,muestras})
+    }
+
+}
   const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion) => {
     try {
       const nuevaOrden = {
@@ -129,4 +182,5 @@ module.exports = {
   getById,
   obtenerDatosOrdenes,
   buscarPorId,
+  listarPorID
 };

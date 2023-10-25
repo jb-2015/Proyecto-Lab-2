@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Orden</title>
+    <%- include('imports/imports') %>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true,value:"Registrar Orden",menu:true})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r border-on">
+                <div class="c3 f-column">
+                    <div class="r">
+                        <div class="c4">
+                            <div class="r">
+                                <div class="c2"> <h2>Paciente:  </h2> <h3><%= person.persona.nombre+" "+person.persona.apellido %></h3> </div>
+                                <div class="c2"> <h2>DNI:</h2> <h3><%= person.persona.dni %></h3> </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="r">
+                        <form action="" class="c4 f-column">
+                            <div class="r">                            
+                                    <label for="">Pedido</label>                                               
+                            </div>
+                            <div class="r">
+                                <input type="text" placeholder="Diagnostico" >
+                            </div>
+                            <div class="r"><input type="text" placeholder="Nombre Medico"></div>
+                            <div class="r"><input type="text" placeholder="Nº Matricula"></div>
+    
+                            <label for="analisisList">Elegir Analisis</label>
+                            <select name="analisisList" id="analisisList">
+                                <option value="">-- Seleccione analisis --</option>
+                                <% listAnalisis.forEach(a=>{
+                                    %>
+                                    <option value=""><%= a.descripcion %></option>
+                                    <%
+                                }) %>
+                                
+                            </select>
+                            <div class="r"><input type="date"></div>
+    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>

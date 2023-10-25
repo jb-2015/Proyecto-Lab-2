@@ -12,7 +12,9 @@ header{
 	display: flex;
 	flex-direction: row;	
 	justify-content: space-around;
-	background: linear-gradient(90deg,#055582 5%,#1db3d4 40%,#68c4e5 85%,white 100%)
+	background: linear-gradient(90deg,#055582 5%,#1db3d4 40%,#68c4e5 85%,white 100%);
+	z-index: 10;
+	
 }
 
 header>.c1>*{

@@ -104,6 +104,21 @@ const findById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const buscarPorId= async (id,callback) => {
+  
+  try {
+    const persona = await Persona.findByPk(id);
+    if (persona) {
+      callback({persona,existe:true})
+    } else{
+      callback({existe: false})
+    }
+      
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const findByNombre = async (req, res) => {
   const { nombre } = req.params;
@@ -277,5 +292,6 @@ module.exports = {
   obtenerCantidadTotal,
   obtenerDatosPersonasConOrdenes,
   tabla,
+  buscarPorId
 
 };

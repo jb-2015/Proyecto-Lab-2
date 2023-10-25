@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports')%>
+    <title></title>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,value:orden.analisis.descripcion,titulo:true,menu:true})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4 f-column border-on">
+                    <div class="r border-on">
+                        <div class="c2"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
+                        <div class="c1"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
+                        <div class="c1"> <h2><%= orden.pedido.persona.fecha_creacion %> </h2></div>
+                    </div>
+                    <div class="r">
+                       <div class="c4 f-column">
+                            <h3> Estado de Orden: <%= orden.estado %></h3>
+                            <h4>Muestras:</h4>
+                            <ul>
+                                <% muestras.forEach(m=>{
+                                    %>
+                                        <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.tipo_muestra %></li>
+                                    <%
+                                })%>      
+                            </ul>
+                            
+                       </div>
+                    </div>
+                    <div class="r border-on f-column">
+                        <div class="c4">
+                            <h3><strong>Analisis:</strong> <%- orden.analisis.descripcion %></h3>
+                        </div>
+                        <div class="c4">
+                            <h3>Tipo: <%- orden.analisis.tipo %></h3>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>
