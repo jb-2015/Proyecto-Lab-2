@@ -1,5 +1,5 @@
 const Pedido  = require('../models/pedido');
-
+const Orden  = require('../models/orden');
 const list = async (req, res) => {
   try {
     const pedido = await Pedido.findAll();
@@ -22,8 +22,29 @@ const getById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const crearPedido = async (req, res) => {
+  const{ id, diagnostico, nombre_medico, nro_matricula,id_analisis,fechacreacion }= req.body;
+  try {
+    const pedido = await Pedido.create({
+      id_persona: id,
+      diagnostico:diagnostico,
+      nombre_medico:nombre_medico,
+      nro_matricula:nro_matricula
+
+    }).then(registro=>{
+      registro.id_pedido;
+Orden.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion)
+    });
+    console.log('Pedido creado:', pedido);
+    return pedido;
+  } catch (error) {
+    console.error('Error al crear el pedido:', error);
+    throw error;
+  }
+};
 
 module.exports = {
   list,
   getById,
+  crearPedido
 };

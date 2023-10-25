@@ -18,6 +18,7 @@
                     <div class="r">
                         <div class="c4">
                             <div class="r">
+
                                 <div class="c2"> <h2>Paciente:  </h2> <h3><%= person.persona.nombre+" "+person.persona.apellido %></h3> </div>
                                 <div class="c2"> <h2>DNI:</h2> <h3><%= person.persona.dni %></h3> </div>
                             </div>
@@ -26,14 +27,17 @@
 
                     <div class="r">
                         <form action="" class="c4 f-column">
+
                             <div class="r">                            
-                                    <label for="">Pedido</label>                                               
+                                    <label>Pedido</label>                                               
                             </div>
                             <div class="r">
-                                <input type="text" placeholder="Diagnostico" >
+                                <input type="text" id="diagnostico" placeholder="Diagnostico" >
+                                
                             </div>
-                            <div class="r"><input type="text" placeholder="Nombre Medico"></div>
-                            <div class="r"><input type="text" placeholder="Nº Matricula"></div>
+                            <input type="hidden" class="form-control" id="id_persona" value="<%= person.persona.id_persona %>">
+                            <div class="r"><input type="text" id="nombre_medico" placeholder="Nombre Medico"></div>
+                            <div class="r"><input type="text" id="nro_matricula" placeholder="Nº Matricula"></div>
     
                             <label for="analisisList">Elegir Analisis</label>
                             <select name="analisisList" id="analisisList">
@@ -53,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="r"><input type="date"></div>
-                            <button> Crear</button>
+                            <button id="btncrear"> Crear</button>
     
                         </form>
                     </div>
