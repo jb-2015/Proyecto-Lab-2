@@ -147,7 +147,8 @@ const listarPorID = async (req,res)=>{
     }
 
 }
-  const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion) => {
+  const crearOrden = async (req,res) => {
+    const {idPedido, idAnalisis, estado, fechaCreacion} = req.body
     try {
       const nuevaOrden = {
         id_pedido: idPedido,
