@@ -1,5 +1,6 @@
 const Pedido  = require('../models/pedido');
 const Orden  = require('../models/orden');
+const ordenController= require('../controllers/ordenController')
 const list = async (req, res) => {
   try {
     const pedido = await Pedido.findAll();
@@ -25,7 +26,7 @@ const getById = async (req, res) => {
 const crearPedido = async (req, res) => {
   const{ id, diagnostico, nombre_medico, nro_matricula,id_analisis,fechacreacion }= req.body;
   try {
-    const pedido = await Pedido.create({
+    const pedido =  Pedido.create({
       id_persona: id,
       diagnostico:diagnostico,
       nombre_medico:nombre_medico,
@@ -33,7 +34,7 @@ const crearPedido = async (req, res) => {
 
     }).then(registro=>{
       registro.id_pedido;
-Orden.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion)
+      ordenController.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion)
     });
     console.log('Pedido creado:', pedido);
     return pedido;

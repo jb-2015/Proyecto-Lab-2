@@ -42,7 +42,7 @@ btn_crear.addEventListener('click', ()=>{
     console.log(fechacreacion)
    
    
-    fetch(`/creaPedido/${idp}/${diagnostico}/${nombre_medico}/${nro_matricula}/${id_analisis}/${fechacreacion}`)
+    fetch(`/pedido/creaPedido/${idp}/${diagnostico}/${nombre_medico}/${nro_matricula}/${id_analisis}/${fechacreacion}`)
 
 
 })
