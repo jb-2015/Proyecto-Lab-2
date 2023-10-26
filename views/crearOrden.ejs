@@ -56,7 +56,12 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="r"><input id="fecha_creacion" type="date"></div>
+                            <div class="r"><input id="fecha_creacion" type="date"> </div>
+                            <select name="estado_orden" id="estado_orden">
+                                <% estados.forEach(e=>{
+                                    %> <option value=""><%= e.nombre %></option> <%
+                                }) %>
+                            </select>
                             <button id="btncrear"> Crear</button>
     
                         </div>

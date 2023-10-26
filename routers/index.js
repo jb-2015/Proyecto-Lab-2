@@ -8,7 +8,7 @@ const router = express.Router();
 const analisisController= require('../controllers/analisisController')
 const pedidoController= require('../controllers/pedidoController')
 const personaController= require('../controllers/personaController')
-
+const estadoController = require('../controllers/estadoController')
 
 
 
@@ -45,9 +45,12 @@ const personaController= require('../controllers/personaController')
     personaController.buscarPorId(id_persona,p=>{
       person=p
     })
-    
+    let estados
+    estadoController.list(est=>{
+      estados=est
+    })
     analisisController.obtenerAnalisis(listAnalisis =>{
-      res.render('crearOrden',{id_persona,listAnalisis,person})
+      res.render('crearOrden',{id_persona,listAnalisis,person,estados})
     })
     
   })
