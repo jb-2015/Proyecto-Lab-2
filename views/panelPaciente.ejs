@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:false})%>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:true})%>
     </header>
     <main>
         <div class="tContainer">
@@ -19,13 +19,33 @@
                     
                         <div class="tContainer">
                             <div class="r">
-                                <div class="c3">
+                                <div class="c3 f-column">
+                                    <h2>Datos del Paciente</h2>
                                     <form action="" id="frm-datos-paciente" class="f-column">
                                         <input type="hidden" id="id_persona" value="<%= persona.id_persona %>">
                                         <input type="text" id="nombre" value="<%= persona.nombre %>">
                                         <input type="text" id="apellido" value="<%= persona.apellido %>">
                                         <input type="date" id="fecha_nacimient" value="<%= persona.fecha_nacimient%>">
                                         <input type="text" id="genero" value="<%= persona.genero %>">
+
+                                        <% if(persona.genero=="f"||persona.genero=="F"){
+                                            %>
+                                            <div id="CheckEmbarazada">
+                                                <label >
+                                                    <input type="checkbox" name="embarazada" value="Embarazada" id="embarazada" checked="<% if(persona.embarazada){
+                                                        %> true <%
+                                                    }  else{
+                                                        %> false <%
+                                                    } %>">
+                                                    embarazada
+                                               </label>
+
+                                            </div>
+                                            
+                                            <%
+                                        } %>
+                                        
+                                        
                                         <input type="text" id="direccion" value="<%= persona.direccion %>">
                                         <input type="text" id="tel" value="<%= persona.tel %>">
                                         <input type="text" id="email" value="<%= persona.email %>">
@@ -35,6 +55,43 @@
                             </div>
                             
                         </div>
+                    
+                </div>
+            </div>
+            <div class="r">
+                <div class="c4 f-column">
+                    <div class="r">
+                        <div class="c1"><h2>Ordenes del paciente</h2></div>
+                        <div class="c1"><a href="/page-create-orden/<%= persona.id_persona %>"><button>Crear Orden</button></a></div>
+                        <div class="c1"></div>
+                        <div class="c1"></div>
+                    </div>
+                    
+                        <%
+                        ordenes.forEach(o=>{
+                            %>
+                            <div class="r">
+                                <div class="ordenItem f-row">
+                                    
+                                    <span class="c1"><%= o.analisis.descripcion%></span>
+                                    <span class="c1"><%=  o.estado  %></span>
+                                    <span class="c1"><%=  o.fecha_creacion  %></span>
+                                    <span class="c1 f-row">
+                                        <a href="/orden/orden-id/<%= o.id_orden%>"><img src="/images/ver.png" alt=""></a>
+                                        <a href=""><img src="/images/print.png" alt=""></a>
+                                        <a href=""><img src="/images/pdf.png" alt=""></a>
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                            
+                            <%
+                        })
+                    %>
+                   
+                    
+                    
+                    
                     
                 </div>
             </div>

@@ -1,11 +1,12 @@
 const Estado  = require('../models/estado');
 
-const list = async (req, res) => {
+const list = async (callback) => {
   try {
     const estado = await Estado.findAll();
-    res.json(estado);
+    callback(estado)
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error
+    //res.status(500).json({ error: error.message });
   }
 };
 

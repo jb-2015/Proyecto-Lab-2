@@ -2,7 +2,21 @@ const  Persona  = require('../models/persona');
 
 const Pedido = require('../models/pedido');
 const Orden = require('../models/orden');
-const ordenController=require('./ordenController')
+const Analisis = require('../models/analisis')
+const ordenController=require('./ordenController');
+const CambioEstado= require('../models/cambio_estado')
+const { where } = require('sequelize');
+const Estado = require('../models/estado');
+
+Persona.hasMany(Pedido, { foreignKey: 'id_persona',as: 'pedid' });
+Pedido.belongsTo(Persona, { foreignKey: 'id_persona', as: 'paci' });
+
+Pedido.hasMany(Orden, { foreignKey: 'id_pedido', as: 'ord' });
+Orden.belongsTo(Pedido, { foreignKey: 'id_pedido', as: 'pedOrd' });
+Orden.hasMany(Analisis, { foreignKey: 'id_analisis',as: 'analisisOrden' });
+
+
+
 const list = async (req, res) => {
   try {
     const persona = await Persona.findAll();
@@ -28,8 +42,8 @@ const create = async (req, res) => {
       email
     });
     //res.render('panelPaciente',{ persona })
-    res.redirect(`/persona/panel-te/${dni}`);
-    //res.status(201).json({ message: 'Persona creada correctamente', persona });
+    //res.redirect(`/persona/panel-te/${dni}`);
+   res.status(201).json({ message: 'Persona creada correctamente', persona });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -92,6 +106,21 @@ const findById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const buscarPorId= async (id,callback) => {
+  
+  try {
+    const persona = await Persona.findByPk(id);
+    if (persona) {
+      callback({persona,existe:true})
+    } else{
+      callback({existe: false})
+    }
+      
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const findByNombre = async (req, res) => {
   const { nombre } = req.params;
@@ -111,8 +140,62 @@ const renderDni = async (req, res) => {
         dni: dni,
       },
     });
-    if (persona) {
-     res.render('panelPaciente',{ persona })
+    
+    const ordenes = await Orden.findAll({
+      attributes: [
+        'id_orden',
+        'fecha_creacion',
+        'estado',
+        
+      ],
+      include: [{
+        model: Pedido,
+        as: 'pedOrd',
+        attributes:['id_persona','nombre_medico','nro_matricula'],
+        where:{
+          id_persona : persona.id_persona
+        }
+      },{
+        model: Analisis,
+        as: 'analisisOrden',
+        attributes: ['descripcion'],
+        as: 'analisis'
+      }],
+      where:{
+        estado:true
+      }
+      
+    })
+    let resOrd=[]
+    ordenes.forEach(async (o)=>{
+          const cambios = await CambioEstado.findAll({
+            include: [{
+              model:Orden,
+              where:{
+                id_orden: o.id_orden
+                    },
+              as: 'orden'
+              },
+              {
+                model: Estado,
+                attributes: ['nombre'],
+                as: 'estado'
+              }
+            ],
+            order: [['id','DESC']],
+            limit: 1
+          })
+          resOrd.push({
+            orden: o,
+            estado: cambios
+          })
+
+    })
+
+
+
+    if (persona) {  
+     res.render('panelPaciente',{ persona, ordenes })
       //res.json(persona);
       
     } else {
@@ -124,6 +207,7 @@ const renderDni = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 /*
 const findByDni = async (dni) => {
   
@@ -236,5 +320,6 @@ module.exports = {
   obtenerCantidadTotal,
   obtenerDatosPersonasConOrdenes,
   tabla,
+  buscarPorId
 
 };

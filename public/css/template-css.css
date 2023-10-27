@@ -73,7 +73,7 @@ body{
 .t-center{
 	text-align: center;
 }
-input[type="text"],input[type="number"],input[type="password"],input[type="date"],input[type="email"],label.rad, #CheckEmbarazada {
+input[type="text"],input[type="number"],input[type="password"],input[type="date"],input[type="email"],label.rad, #CheckEmbarazada,select {
 
 	width: 100%;
 	height: 40px;
@@ -136,4 +136,17 @@ button:hover{
 
 .oculto{
 	display: none;
+}
+
+.border-on{
+	border:2px solid black
+}
+
+.bg-orange{
+	background: orange;
+
+}
+
+.bg-lightBlue{
+	background: lightblue;
 }

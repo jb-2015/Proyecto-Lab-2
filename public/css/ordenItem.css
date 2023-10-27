@@ -1,0 +1,13 @@
+.ordenItem{
+    width: 100%;
+    background: linear-gradient(90deg,white 90%,#68c4e5 120%);
+    padding: 10px;
+    border-radius: 10px;
+    border: 3px solid #68c4e5;
+    box-shadow: 5px 5px 7px #000000;
+    transition: all .3s ease;
+}
+.ordenItem img{
+    width: 45px;
+    aspect-ratio: 1.5/1;
+}

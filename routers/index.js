@@ -5,6 +5,10 @@ const morgan = require('morgan');
 const express = require('express');
 const router = express.Router();
 
+const analisisController= require('../controllers/analisisController')
+const pedidoController= require('../controllers/pedidoController')
+const personaController= require('../controllers/personaController')
+const estadoController = require('../controllers/estadoController')
 
 
 
@@ -33,13 +37,23 @@ const router = express.Router();
   router.get("/page-administrativo",(req,res)=>{
     res.render("page-administrativo")	
   })
-  /*
-  router.get('/panel-te', (req, res) => {
-
-    res.render('panelPaciente');
-  });
   
- */
+  router.get("/page-create-orden/:id_persona",(req,res)=>{
+    const {id_persona}=req.params
+    let person
+
+    personaController.buscarPorId(id_persona,p=>{
+      person=p
+    })
+    let estados
+    estadoController.list(est=>{
+      estados=est
+    })
+    analisisController.obtenerAnalisis(listAnalisis =>{
+      res.render('crearOrden',{id_persona,listAnalisis,person,estados})
+    })
+    
+  })
   
 
 
