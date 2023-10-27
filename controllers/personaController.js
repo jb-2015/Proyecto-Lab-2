@@ -4,7 +4,9 @@ const Pedido = require('../models/pedido');
 const Orden = require('../models/orden');
 const Analisis = require('../models/analisis')
 const ordenController=require('./ordenController');
+const CambioEstado= require('../models/cambio_estado')
 const { where } = require('sequelize');
+const Estado = require('../models/estado');
 
 Persona.hasMany(Pedido, { foreignKey: 'id_persona',as: 'pedid' });
 Pedido.belongsTo(Persona, { foreignKey: 'id_persona', as: 'paci' });
@@ -158,11 +160,37 @@ const renderDni = async (req, res) => {
         as: 'analisisOrden',
         attributes: ['descripcion'],
         as: 'analisis'
-      }]
+      }],
+      where:{
+        estado:true
+      }
       
     })
-    
-    
+    let resOrd=[]
+    ordenes.forEach(async (o)=>{
+          const cambios = await CambioEstado.findAll({
+            include: [{
+              model:Orden,
+              where:{
+                id_orden: o.id_orden
+                    },
+              as: 'orden'
+              },
+              {
+                model: Estado,
+                attributes: ['nombre'],
+                as: 'estado'
+              }
+            ],
+            order: [['id','DESC']],
+            limit: 1
+          })
+          resOrd.push({
+            orden: o,
+            estado: cambios
+          })
+
+    })
 
 
 
