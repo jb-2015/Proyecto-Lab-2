@@ -4,8 +4,10 @@ const Persona = require('../models/persona');
 const Analisis = require('../models/analisis');
 const Examen = require('../models/examen');
 const Muestra = require('../models/muestra');
+const CambioEstado = require('../models/cambio_estado')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
+
 
 /** PROBANDO */
 
@@ -147,7 +149,7 @@ const listarPorID = async (req,res)=>{
     }
 
 }
-  const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion) => {
+  const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion,estadoOrden,mstrs) => {
     try {
       const nuevaOrden = {
         id_pedido: idPedido,
@@ -157,6 +159,11 @@ const listarPorID = async (req,res)=>{
       };
   
       const ordenCreada = await Orden.create(nuevaOrden);
+      const nuevoCambioEstado= {
+        id_estado:estadoOrden,
+        id_orden: ordenCreada.id_orden
+      }
+      const cambioEstado= await CambioEstado.create(nuevoCambioEstado)
   
       return ordenCreada;
     } catch (error) {

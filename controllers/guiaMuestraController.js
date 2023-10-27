@@ -6,7 +6,7 @@ const buscarPorAnalisis= async (req,res)=>{
     const {id} = req.params
     try{
         const list_muestra= await Guia_muestra.findAll({
-            attributes: ['g_descripcion'],
+            attributes: ['id_guiaM','g_descripcion'],
             where:{
                 id_analisis: id
             }

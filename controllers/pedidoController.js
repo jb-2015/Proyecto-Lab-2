@@ -24,7 +24,8 @@ const getById = async (req, res) => {
   }
 };
 const crearPedido = async (req, res) => {
-  const{ id, diagnostico, nombre_medico, nro_matricula,id_analisis,fechacreacion }= req.body;
+  const{ id, diagnostico, nombre_medico, nro_matricula,id_analisis,fechacreacion,estado_orden,muestras }= req.body;
+  console.log("CRER PEDIDO estadoOrden: "+estado_orden)
   try {
     const pedido =  Pedido.create({
       id_persona: id,
@@ -34,8 +35,10 @@ const crearPedido = async (req, res) => {
 
     }).then(registro=>{
       registro.id_pedido;
-      ordenController.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion)
-    });
+      ordenController.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion,estado_orden,muestras)
+    }).then(()=>{
+      res.send({mensaje: "Creadas las cosas"})
+    })
     console.log('Pedido creado:', pedido);
     return pedido;
   } catch (error) {

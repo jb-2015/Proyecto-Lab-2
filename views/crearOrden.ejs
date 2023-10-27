@@ -36,6 +36,7 @@
                                 
                             </div>
                             <input type="hidden" class="form-control" id="id_persona" value="<%= person.persona.id_persona %>">
+                            <input type="hidden" class="form-control" id="dni_persona" value="<%= person.persona.dni %>">
                             <div class="r"><input type="text" id="nombre_medico" placeholder="Nombre Medico"></div>
                             <div class="r"><input type="text" id="nro_matricula" placeholder="Nº Matricula"></div>
     
@@ -59,7 +60,7 @@
                             <div class="r"><input id="fecha_creacion" type="date"> </div>
                             <select name="estado_orden" id="estado_orden">
                                 <% estados.forEach(e=>{
-                                    %> <option value=""><%= e.nombre %></option> <%
+                                    %> <option value="<%= e.id_estado %>"><%= e.nombre %></option> <%
                                 }) %>
                             </select>
                             <button id="btncrear"> Crear</button>
