@@ -35,7 +35,7 @@ const crearPedido = async (req, res) => {
 
     }).then(registro=>{
       registro.id_pedido;
-      ordenController.crearOrden(registro.id_pedido,id_analisis,null,fechacreacion,estado_orden,muestras)
+      ordenController.crearOrden(registro.id_pedido,id_analisis,true,fechacreacion,estado_orden,muestras)
     }).then(()=>{
       res.send({mensaje: "Creadas las cosas"})
     })
