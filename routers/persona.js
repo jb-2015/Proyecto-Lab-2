@@ -10,6 +10,7 @@ router.put('/update/:id', personaController.update);
 router.put('/create', personaController.create);
 router.get('/remove/:id', personaController.remove);
 router.get('/id/:id', personaController.findById);
+router.get('/urldni/:dni', personaController.findByDni);
 router.get('/nombre/:nombre', personaController.findByNombre);
 
 router.get('/apellido/:apellido', personaController.findByApellido);

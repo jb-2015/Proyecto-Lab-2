@@ -13,7 +13,7 @@ const Usuario = sequelize.define('usuario', {
     defaultValue: null
   },
   clave: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(255),
     allowNull: true,
     defaultValue: null,
     collate: 'utf8mb4_spanish2_ci'

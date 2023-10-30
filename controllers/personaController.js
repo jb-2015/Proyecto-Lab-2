@@ -180,8 +180,9 @@ const renderDni = async (req, res) => {
   }
 };
 
-/*
-const findByDni = async (dni) => {
+
+const findByDni = async (req,res) => {    
+  const{dni}=req.params;
   
   try {
     const persona = await Persona.findOne({
@@ -190,20 +191,16 @@ const findByDni = async (dni) => {
       },
     });
     if (persona) {
-      //res.render('panelPaciente',{personas:persona})
-      //console.log(persona)
-     return persona;
-      
-    } else {
-      //res.status(404).json({ error: 'Persona no encontrada' });
-      return false;
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+      res.send(true);
+  } else {
+    res.send(false)
   }
+} catch (error) {
+  console.error('Error al buscar la persona:', error);
+}
 };
 
-*/
+
 const findByApellido = async (req, res) => {
   const { apellido } = req.params;
   try {
@@ -286,7 +283,7 @@ module.exports = {
   remove,
   findById,
   findByNombre,
-  //findByDni,
+  findByDni,
   findByApellido,
   findByEmail,
   obtenerCantidadTotal,

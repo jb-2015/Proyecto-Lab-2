@@ -10,8 +10,6 @@ const pedidoController= require('../controllers/pedidoController')
 const personaController= require('../controllers/personaController')
 const estadoController = require('../controllers/estadoController')
 
-
-
   
   router.use(express.static("public"))
   router.use("/css",express.static('public/css'))
@@ -32,10 +30,24 @@ const estadoController = require('../controllers/estadoController')
     res.render("accesoPaciente")
   })
   router.get("/portal-personal",(req,res)=>{
+
+    
     res.render("accesoPersonal")
   })
   router.get("/page-administrativo",(req,res)=>{
     res.render("page-administrativo")	
+  })
+  
+  router.get("/page-paciente",(req,res)=>{
+    res.render("page-Paciente")	
+  })
+
+  router.get("/page-tecnico",(req,res)=>{
+    res.render("page-Tecnico")	
+  })
+
+  router.get("/page-bioquim",(req,res)=>{
+    res.render("page-Bioquimico")	
   })
   
   router.get("/page-create-orden/:id_persona",(req,res)=>{
@@ -55,6 +67,13 @@ const estadoController = require('../controllers/estadoController')
     
   })
   
+ 
+////////////////////TOKEN////////////////////////////////////////////////
+
+
+
+
+
 
 
 
