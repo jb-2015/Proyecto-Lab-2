@@ -7,6 +7,8 @@ const Muestra = require('../models/muestra');
 const CambioEstado = require('../models/cambio_estado')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
+const Estado = require('../models/estado');
+const CambioEstado = require('../models/cambio_estado');
 
 
 /** PROBANDO */
@@ -207,6 +209,26 @@ const listarPorID = async (req,res)=>{
       throw new Error('Error al obtener descripciones de análisis: ' + error.message);
     }
   };
+
+  const buscarPorEstado = async (estado, cback)=>{
+      const CambioEstado = await CambioEstado.findAll({
+        include:[{
+          model: Orden,
+          attributes:[]          
+        },
+        {
+          model: Estado,
+          attributes:['nombre'],
+          where: {
+            nombre: 'Analitica'
+          }
+          
+        }
+      ]
+      })
+  }
+
+
 module.exports = {
   obtenerDescripcionesAnalisis,
   crearOrden,

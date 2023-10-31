@@ -1,1 +1,46 @@
-<h1>Pagina del tecnico</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports') %>
+    <title>Tecnico</title>
+</head>
+<body>
+    <header> <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de Tecnico", menu:true, tipoUser: rol}) %></header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4">
+                    <h1>Ordenes en estado de Analitica</h1>
+                </div>
+            </div>
+            <div class="r">
+                <%
+                ordenes.forEach(o=>{
+                    %>
+                    <div class="r">
+                        <div class="ordenItem f-row">
+                            
+                            <span class="c1"><%= o.analisis.descripcion%></span>
+                            <span class="c1"><%=  o.estado  %></span>
+                            <span class="c1"><%=  o.fecha_creacion  %></span>
+                            <span class="c1 f-row">
+                                <a href="/orden/orden-id/<%= o.id_orden%>"><img src="/images/ver.png" alt=""></a>
+                                <a href=""><img src="/images/print.png" alt=""></a>
+                                <a href=""><img src="/images/pdf.png" alt=""></a>
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <%
+                })
+            %>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>

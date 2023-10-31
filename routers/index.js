@@ -68,10 +68,23 @@ router.get('/cerrar-sesion', cerrarSesion);
 
   
  
-
+/**ACA VA A ENTRAR CUANDO SE HAGA UN INICIO DE SESION */
   router.get('/page-administrativo', requireAuth,(req, res) => {
-    res.render("page-administrativo")	
+    res.render("page-administrativo",{rol:'administrativo'})	
   });
+  router.get("/page-paciente",(req,res)=>{
+    res.render("page-Paciente",{rol:'paciente'})	
+  })
+
+  router.get("/page-tecnico",(req,res)=>{
+    
+    res.render("page-Tecnico",{rol:'tecnico'})	
+  })
+
+  router.get("/page-bioquim",(req,res)=>{
+    res.render("page-Bioquimico",{rol:'bioquimico'})	
+  })
+  //--------------------------------------------------------------------
   
   router.get("/",(req,res)=>{
     res.render("home")
@@ -87,17 +100,7 @@ router.get('/cerrar-sesion', cerrarSesion);
 
 
   
-  router.get("/page-paciente",(req,res)=>{
-    res.render("page-Paciente")	
-  })
-
-  router.get("/page-tecnico",(req,res)=>{
-    res.render("page-Tecnico")	
-  })
-
-  router.get("/page-bioquim",(req,res)=>{
-    res.render("page-Bioquimico")	
-  })
+  
   
   router.get("/page-create-orden/:id_persona",requireAuth,(req,res)=>{
     const {id_persona}=req.params

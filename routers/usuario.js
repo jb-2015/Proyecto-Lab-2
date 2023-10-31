@@ -49,11 +49,13 @@ router.post('/auth',async (req, res) => {
 			res.json({
 				ok: true,
 				//redirectTo: ''
+                rol: usuario.rol
 			});
 		} else if (usuario.rol === 'administrativo') {
 			res.json({
 				ok: true,
-                redirectTo: `/page-${usuario.rol}`
+                redirectTo: `/page-${usuario.rol}`,
+                rol: usuario.rol
 			});
 		}else if (usuario.rol === 'tecnico') {
 			res.json({
