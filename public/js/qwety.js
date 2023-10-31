@@ -40,6 +40,7 @@ btnEntrarUser.addEventListener('click', async()=>{
     } catch (error) {
         console.error('Error:', error);
     }
-    
+    document.getElementById('dniId').value='';
+    document.getElementById('claveId').value='';
 })
 

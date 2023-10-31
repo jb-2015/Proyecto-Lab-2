@@ -20,23 +20,61 @@ const estadoController = require('../controllers/estadoController')
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({extended:false}))
   
+  const session =require('express-session')
+router.use(session({
+	secret: 'secret',
+	resave: false,
+    saveUninitialized: true,
+ //  cookie: { secure: false }
+}))
+function requireAuth(req, res, next) {
+  console.log("Middleware requireAuth activado");
+  if (req.session && req.session.user) {
+    return next(); // Si hay una sesión activa, permite el acceso
+  }
+  res.redirect('/portal-personal'); // Si no hay sesión activa, redirige al inicio de sesión
+}
+
+
+
+
+function checkIncognito(req, res, next) {
+    const userAgent = req.headers['user-agent'];
+    const isIncognito = /\/Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  
+    if (isIncognito) {
+        req.session.destroy(); // Destruye la sesión
+      // Redirige al inicio de sesión
+     
+      }
+        next(); // Si no es incógnito, continúa con la siguiente ruta o middleware
+      
+  }
+  
+  // Utiliza el middleware checkIncognito antes de tus rutas
+  router.use(checkIncognito);
+
   
   
+ 
+
+  router.get('/page-administrativo', requireAuth,(req, res) => {
+    res.render("page-administrativo")	
+  });
   
   router.get("/",(req,res)=>{
     res.render("home")
   })
   router.get("/portal-paciente",(req,res)=>{
+    
     res.render("accesoPaciente")
   })
   router.get("/portal-personal",(req,res)=>{
-
     
     res.render("accesoPersonal")
   })
-  router.get("/page-administrativo",(req,res)=>{
-    res.render("page-administrativo")	
-  })
+
+
   
   router.get("/page-paciente",(req,res)=>{
     res.render("page-Paciente")	
@@ -50,7 +88,7 @@ const estadoController = require('../controllers/estadoController')
     res.render("page-Bioquimico")	
   })
   
-  router.get("/page-create-orden/:id_persona",(req,res)=>{
+  router.get("/page-create-orden/:id_persona",requireAuth,(req,res)=>{
     const {id_persona}=req.params
     let person
 

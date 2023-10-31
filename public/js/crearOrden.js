@@ -3,11 +3,11 @@
 const seleccionador= document.getElementById('analisisList')
 const muestraSolicitadas=  document.getElementById('muestrasSolicitadas')
 
-seleccionador.addEventListener('change',()=>{
+seleccionador.addEventListener('change',async ()=>{
     
     const id = seleccionador.value
 
-    fetch(`/muestra/obtenerMuestras/${id}`)
+    await fetch(`/muestra/obtenerMuestras/${id}`)
     .then(res=>res.json())
     .then(datos=>{
         muestraSolicitadas.innerHTML=""

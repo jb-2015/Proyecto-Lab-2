@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection= require('../config/database')
+//const connection= require('../config/database')
 const bcryptjs= require('bcrypt')
 const usuarioController = require('../controllers/usuarioController');
 const { body, validationResult } = require('express-validator');
@@ -9,37 +9,13 @@ router.get('/formularioUsuario', (req, res) => {
 });
 
 
-router.get('/', usuarioController.list);
-router.get('/:id', usuarioController.getById);
+  // Utiliza el middleware requireAuth en tus rutas protegidas
 
+ 
 
-router.post('/guardarUsuario',usuarioController.saveUser);
-router.get('/busqDni/:dni', usuarioController.buscarDni)
-/*
-router.put('/campos', [
-    body('dni', 'Ingrese el Numero de Documento')
-    .exists()
-    .isNumeric()
-    .isLength(6),
-    body('clave','Ingrese clave minimo 6 carecteres')
-   
-    .exists()
-    .isLength({ min:6})
-], (req, res) => {
+  // A partir de aquí, puedes definir tus rutas normales
+  
 
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-		console.log( errors.msg)
-		const valores= req.body
-		const validaciones=errors.array()
-        res.render('accesoPersonal',{ errors: validationResult(req).array(),valores: valores });
-        
-    }else{
-		res.send('Validacion exitosa')
-	}
-})
-*/
 router.post('/auth',async (req, res) => {
     
         try {
@@ -65,15 +41,19 @@ router.post('/auth',async (req, res) => {
             });
             return;
         }
+
+        req.session.user = usuario.id_usuario;
+        console.log(req.session.user);
+        
 		if (usuario.rol === 'paciente') {
 			res.json({
 				ok: true,
 				//redirectTo: ''
 			});
-		} else if (usuario.rol === 'admin') {
+		} else if (usuario.rol === 'administrativo') {
 			res.json({
 				ok: true,
-				redirectTo: '/page-administrativo'
+                redirectTo: `/page-${usuario.rol}`
 			});
 		}else if (usuario.rol === 'tecnico') {
 			res.json({
@@ -149,5 +129,47 @@ router.post('/pacienTe', async(req, res)=>{
         });
     }
 });
+
+
+router.get('/', usuarioController.list);
+router.get('/:id', usuarioController.getById);
+
+
+router.post('/guardarUsuario',usuarioController.saveUser);
+router.get('/busqDni/:dni', usuarioController.buscarDni)
+
+
+
+/*
+router.put('/campos', [
+    body('dni', 'Ingrese el Numero de Documento')
+    .exists()
+    .isNumeric()
+    .isLength(6),
+    body('clave','Ingrese clave minimo 6 carecteres')
+   
+    .exists()
+    .isLength({ min:6})
+], (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+		console.log( errors.msg)
+		const valores= req.body
+		const validaciones=errors.array()
+        res.render('accesoPersonal',{ errors: validationResult(req).array(),valores: valores });
+        
+    }else{
+		res.send('Validacion exitosa')
+	}
+})
+*/
+
+
+
+
+
+
 
 module.exports = router;

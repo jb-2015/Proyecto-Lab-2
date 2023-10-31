@@ -36,12 +36,7 @@ app.use('/resources',express.static(path.join(__dirname, '/public')));
 
 const bcryptjs= require('bcrypt')
 
-const session =require('express-session')
-app.use(session({
-	secret: 'secret',
-	resave: true,
-    saveUninitialized: true
-}))
+
 
 const connection= require('./config/database')
 const Usuario = require('./models/usuario'); 

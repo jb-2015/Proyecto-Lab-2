@@ -5,6 +5,45 @@ const router = express.Router();
 const personaController = require('../controllers/personaController');
 
 
+
+const session =require('express-session')
+router.use(session({
+	secret: 'secret',
+	resave: false,
+    saveUninitialized: true,
+    
+}))
+function requireAuth(req, res, next) {
+  if (req.session && req.session.user) {
+    return next(); // Si hay una sesión activa, permite el acceso
+  }
+  res.redirect('/portal-personal'); // Si no hay sesión activa, redirige al inicio de sesión
+}
+
+
+
+
+function checkIncognito(req, res, next) {
+    const userAgent = req.headers['user-agent'];
+    const isIncognito = /\/Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  
+    if (isIncognito) {
+        req.session.destroy(); // Destruye la sesión
+      // Redirige al inicio de sesión
+      } 
+        next(); // Si no es incógnito, continúa con la siguiente ruta o middleware
+      
+  }
+  
+  // Utiliza el middleware checkIncognito antes de tus rutas
+  router.use(checkIncognito);
+
+
+
+
+
+
+
 router.get('/', personaController.list);
 router.put('/update/:id', personaController.update);
 router.put('/create', personaController.create);
@@ -40,6 +79,6 @@ router.post("/panel-paciente",async (req,res)=>{
 })
 */
 
-router.get('/panel-te/:dni', personaController.renderDni);
+router.get('/panel-te/:dni',requireAuth, personaController.renderDni);
 
 module.exports = router;
