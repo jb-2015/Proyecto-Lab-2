@@ -54,7 +54,18 @@ function checkIncognito(req, res, next) {
   // Utiliza el middleware checkIncognito antes de tus rutas
   router.use(checkIncognito);
 
-  
+  function cerrarSesion(req, res) {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error al cerrar sesión:", err);
+            res.status(500).send("Error al cerrar sesión");
+        } else {
+            res.redirect('/'); // Puedes redirigir a donde prefieras
+        }
+    });
+}
+router.get('/cerrar-sesion', cerrarSesion);
+
   
  
 

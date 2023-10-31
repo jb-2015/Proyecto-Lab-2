@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
 
-const bcryptjs= require('bcrypt')
+const bcryptjs= require('bcryptjs')
 
 const list = async (req, res) => {
   try {

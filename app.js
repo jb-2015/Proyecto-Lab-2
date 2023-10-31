@@ -34,7 +34,7 @@ dotenv.config({path:'./.env'})
 app.use('/resources',express.static('public'));
 app.use('/resources',express.static(path.join(__dirname, '/public')));
 
-const bcryptjs= require('bcrypt')
+
 
 
 

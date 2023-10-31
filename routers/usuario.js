@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 //const connection= require('../config/database')
-const bcryptjs= require('bcrypt')
+const bcryptjs= require('bcryptjs')
 const usuarioController = require('../controllers/usuarioController');
 const { body, validationResult } = require('express-validator');
 router.get('/formularioUsuario', (req, res) => {
