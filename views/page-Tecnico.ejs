@@ -24,10 +24,14 @@
                     <div class="r">
                         <div class="ordenItem f-row">
                             
-                            <span class="c1"><%= o.id_analisis%></span>
-                            <span class="c1"><% if(o.cambioEstado.estado){%> <%= o.cambio_estado.estado.nombre %> <%}
-                                                else{ %> No llego el estado <% }
-                                 %></span>
+                            <span class="c1 f-column bg-lightBlue border-on2">
+                                <div class="r "><%= o.dataValues.dni_persona %></div>
+                                <div class="r"><h3><%= o.dataValues.nombre_persona +" "+ o.dataValues.apellido_persona %></h3></div>
+                            </span>
+                            <span class="c1 f-column">
+                                <div class="r"><%= o.dataValues.descripcion%></div>
+                                <div class="r"><%= o.dataValues.est %></div>
+                            </span>
                             <span class="c1"><%=  o.fecha_creacion  %></span>
                             <span class="c1 f-row">
                                 <a href="/orden/orden-id/<%= o.id_orden%>"><img src="/images/ver.png" alt=""></a>
@@ -37,6 +41,7 @@
                             
                         </div>
                     </div>
+                    
                     
                     <%
                 })

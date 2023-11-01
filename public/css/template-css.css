@@ -139,14 +139,20 @@ button:hover{
 }
 
 .border-on{
-	border:2px solid black
+	border:2px solid black;
+	border-radius: 10px 0 0 10px;
+	
 }
-
+.border-on2{
+	
+	border-radius: 10px 0 0 10px;
+	
+}
 .bg-orange{
 	background: orange;
 
 }
 
 .bg-lightBlue{
-	background: lightblue;
+	background: linear-gradient(90deg,#055582 1%,#1db3d4 40%,#68c4e5 85%);
 }

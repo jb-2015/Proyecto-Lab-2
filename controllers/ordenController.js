@@ -211,32 +211,30 @@ const listarPorID = async (req,res)=>{
   };
 
   const buscarPorEstado = async (est, cback)=>{
-       Orden.findAll({
-        include: [
-          {
-            model: CambioEstado,
-            as: 'cambioEstado', // Asegúrate de usar el nombre correcto de la asociación en tu modelo
-            include:[
-              {
-                model:Estado,
-                as: 'estado'
-              }
-            ],
-            where: {
-              id_estado: est
-            },
-            required: true, // Esto asegura que solo se seleccionen órdenes que tengan un cambio de estado con id_estado = 1
-          },
-        ],
-      })
+    
+    const query2 = `SELECT o.id_orden ,a.descripcion, e.nombre as est,o.fecha_creacion, per.nombre as nombre_persona,per.apellido as apellido_persona,per.dni as dni_persona
+    FROM orden o
+    INNER JOIN cambio_estado ce ON o.id_orden = ce.id_orden 
+    JOIN estado as e on e.id_estado=ce.id_estado 
+    JOIN analisis as a on a.id_analisis=o.id_analisis
+    JOIN pedido as p on p.id_pedido=o.id_pedido
+    JOIN persona as per on per.id_persona=p.id_persona
+    WHERE ce.id = (
+        SELECT MAX(ce2.id)
+        FROM cambio_estado ce2
+        WHERE ce2.id_orden = o.id_orden and ce.id_estado=1
+    )`
+
+      sequelize.query(query2,{model: Orden,mapToModel: true,raw: false})
       .then(ordenes => {
-        // Aquí tienes la lista de órdenes que cumplen con los criterios
+        // Aquí tenemos la lista de órdenes que cumplen con los criterios
         cback(ordenes)
         console.log(ordenes);
       })
       .catch(err => {
         console.error('Error:', err);
       });
+    
 
       
   }
