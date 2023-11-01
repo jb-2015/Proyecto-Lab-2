@@ -18,8 +18,8 @@ router.get('/formularioUsuario', (req, res) => {
   
 
   router.post('/auth', [
-    body('dni').notEmpty().isNumeric().isLength({ min: 6 }).withMessage('error dni'),
-    body('clave').notEmpty().isLength({ min: 6 }).withMessage('error clave')
+    body('dni').notEmpty().isNumeric().isLength({ min: 8 }).withMessage('Ingrese dni valido'),
+    body('clave').notEmpty().isLength({ min: 6 }).withMessage('Ingrese una clave valida')
 ], async (req, res) => {
     const errores = validationResult(req);
     if (!errores.isEmpty()) {
@@ -55,7 +55,7 @@ router.get('/formularioUsuario', (req, res) => {
         }
 
         req.session.user = usuario.id_usuario;
-        console.log(req.session.user);
+
         
 		if (usuario.rol === 'paciente') {
 			res.json({
@@ -72,12 +72,12 @@ router.get('/formularioUsuario', (req, res) => {
 		}else if (usuario.rol === 'tecnico') {
 			res.json({
 				ok: true,
-				redirectTo: '/page-Tecnico'
+				redirectTo: `/page-${usuario.rol}`
 			});
 		}else if (usuario.rol === 'bioquimico') {
 			res.json({
 				ok: true,
-				redirectTo: '/page-bioquim'
+				redirectTo: `/page-${usuario.rol}`
 			});
 		}
     } catch (error) {
@@ -89,9 +89,18 @@ router.get('/formularioUsuario', (req, res) => {
     }
 });
 
-router.post('/pacienTe', async(req, res)=>{
-
-
+router.post('/pacienTe', [
+    body('dni').notEmpty().isNumeric().isLength({ min: 8 }).withMessage('Ingrese dni valido'),
+    body('clave').notEmpty().isLength({ min: 6 }).withMessage('Ingrese una clave valida')
+], async (req, res) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return res.json({
+            ok: false,
+            error: 'Error de validación',
+            errores: errores.array()
+        });
+    }
     const { dni, clave } = req.body;
 
     try {
@@ -117,9 +126,9 @@ router.post('/pacienTe', async(req, res)=>{
 		if (usuario.rol === 'paciente') {
 			res.json({
 				ok: true,
-				redirectTo: '/page-paciente'
+				redirectTo: `/page-${usuario.rol}`
 			});
-		} else if (usuario.rol === 'admin') {
+		} else if (usuario.rol === 'administrativo') {
 			res.json({
 				ok: true,
 				//redirectTo: '/page-administrativo'

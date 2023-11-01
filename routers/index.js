@@ -29,7 +29,7 @@ router.use(session({
  //  cookie: { secure: false }
 }))
 function requireAuth(req, res, next) {
-  console.log("Middleware requireAuth activado");
+
   if (req.session && req.session.user) {
     return next(); // Si hay una sesión activa, permite el acceso
   }
