@@ -25,7 +25,7 @@ btnEntrarUser.addEventListener('click', async()=>{
         });
       
         const data = await response.json();
-        console.log(data)
+    
        
         document.getElementById('errordni').textContent = '';
         document.getElementById('errorclave').textContent = '';
@@ -45,8 +45,6 @@ btnEntrarUser.addEventListener('click', async()=>{
             data.errores.forEach(error => {
                 const campo = error.path;
                 const mensaje = error.msg;
-    console.log("--",campo)
-    console.log("--y",mensaje)
                 // Mostrar mensaje de error en el campo correspondiente
                 document.getElementById(`error${campo}`).textContent = mensaje;
             });

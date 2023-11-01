@@ -2,8 +2,8 @@
 const btnPaciente= document.getElementById('btnPaciente')
 
 btnPaciente.addEventListener('click', async()=>{
-    const dni = document.getElementById('dni-paciente').value;
-    const clave = document.getElementById('clave-paciente').value;
+    const dni = document.getElementById('dniId').value;
+    const clave = document.getElementById('claveId').value;
 
     
     try {
@@ -20,23 +20,33 @@ btnPaciente.addEventListener('click', async()=>{
         });
       
         const data = await response.json();
-       
+        document.getElementById('errordni').textContent = '';
+        document.getElementById('errorclave').textContent = '';
         if (data.ok) {
             if (data.redirectTo) {
-                
+            
                 window.location.href = data.redirectTo;
               
             } else {
                 alert('Eres Personal, se te va redireccionar')
                 window.location.href='/portal-personal'
             }
- 
-        } else {
-            console.error('Error al crear Usuario:', data.error);
+            document.getElementById('dniId').value = '';
+            document.getElementById('claveId').value = '';
+       } 
+
+        if (data.errores) {
+            data.errores.forEach(error => {
+                const campo = error.path;
+                const mensaje = error.msg;
+                // Mostrar mensaje de error en el campo correspondiente
+                document.getElementById(`error${campo}`).textContent = mensaje;
+            });
+          
         }
+
     } catch (error) {
         console.error('Error:', error);
     }
-    document.getElementById('dni-paciente').value = '';
-    document.getElementById('clave-paciente').value = '';
+    
 })
