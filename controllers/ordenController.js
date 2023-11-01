@@ -97,7 +97,7 @@ const buscarPorId =async (req, res) => {
   .then(result => {
   
    // console.log(resultado);
-   res.render('vistaOrden', { result });
+   res.render('vistaOrden', {rol:'' , result});
    // res.json(resultado); // Agrega esta línea para enviar el resultado como respuesta
   })
   .catch(error => {
@@ -147,7 +147,7 @@ const listarPorID = async (req,res)=>{
       }
     })
     if(orden){
-      res.render('vistaOrden',{orden,muestras})
+      res.render('vistaOrden',{orden,muestras,rol:''})
     }
 
 }
@@ -210,22 +210,35 @@ const listarPorID = async (req,res)=>{
     }
   };
 
-  const buscarPorEstado = async (estado, cback)=>{
-      const CambioEstado = await CambioEstado.findAll({
-        include:[{
-          model: Orden,
-          attributes:[]          
-        },
-        {
-          model: Estado,
-          attributes:['nombre'],
-          where: {
-            nombre: 'Analitica'
-          }
-          
-        }
-      ]
+  const buscarPorEstado = async (est, cback)=>{
+       Orden.findAll({
+        include: [
+          {
+            model: CambioEstado,
+            as: 'cambioEstado', // Asegúrate de usar el nombre correcto de la asociación en tu modelo
+            include:[
+              {
+                model:Estado,
+                as: 'estado'
+              }
+            ],
+            where: {
+              id_estado: est
+            },
+            required: true, // Esto asegura que solo se seleccionen órdenes que tengan un cambio de estado con id_estado = 1
+          },
+        ],
       })
+      .then(ordenes => {
+        // Aquí tienes la lista de órdenes que cumplen con los criterios
+        cback(ordenes)
+        console.log(ordenes);
+      })
+      .catch(err => {
+        console.error('Error:', err);
+      });
+
+      
   }
 
 
@@ -236,5 +249,6 @@ module.exports = {
   getById,
   obtenerDatosOrdenes,
   buscarPorId,
-  listarPorID
+  listarPorID,
+  buscarPorEstado
 };

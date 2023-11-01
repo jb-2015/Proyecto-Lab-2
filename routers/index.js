@@ -9,6 +9,7 @@ const analisisController= require('../controllers/analisisController')
 const pedidoController= require('../controllers/pedidoController')
 const personaController= require('../controllers/personaController')
 const estadoController = require('../controllers/estadoController')
+const ordenController = require('../controllers/ordenController')
 const { body, validationResult } = require('express-validator');
 
   
@@ -79,8 +80,10 @@ router.get('/cerrar-sesion', cerrarSesion);
 
 
   router.get("/page-tecnico",(req,res)=>{
-    
-    res.render("page-Tecnico",{rol:'tecnico'})	
+    ordenController.buscarPorEstado(1,ordenes=>{
+        res.render("page-Tecnico",{rol:'tecnico', ordenes})
+    })
+    	
   })
 
   router.get("/page-bioquim",(req,res)=>{

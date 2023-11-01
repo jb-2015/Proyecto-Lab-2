@@ -40,7 +40,7 @@ Determinacion.belongsTo(Examen, { foreignKey: 'id_examen', as: 'examen'  });
 Examen.hasMany(Determinacion, { foreignKey: 'id_examen', as: 'determinacion'  });
 
 CambioEstado.belongsTo(Orden, { foreignKey: 'id_orden', as: 'orden'  });
-Orden.hasMany(CambioEstado, { foreignKey: 'id_orden', as: 'cambio_estado'  });
+Orden.hasMany(CambioEstado, { foreignKey: 'id_orden', as: 'cambioEstado'  });
 
 CambioEstado.belongsTo(Estado, { foreignKey: 'id_estado', as: 'estado'  });
 Estado.hasMany(CambioEstado, { foreignKey: 'id_estado', as: 'cambio_estado'  });

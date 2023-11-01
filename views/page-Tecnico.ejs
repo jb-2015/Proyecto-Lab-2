@@ -17,14 +17,17 @@
                 </div>
             </div>
             <div class="r">
+               <div class="c4 f-column">
                 <%
                 ordenes.forEach(o=>{
                     %>
                     <div class="r">
                         <div class="ordenItem f-row">
                             
-                            <span class="c1"><%= o.analisis.descripcion%></span>
-                            <span class="c1"><%=  o.estado  %></span>
+                            <span class="c1"><%= o.id_analisis%></span>
+                            <span class="c1"><% if(o.cambioEstado.estado){%> <%= o.cambio_estado.estado.nombre %> <%}
+                                                else{ %> No llego el estado <% }
+                                 %></span>
                             <span class="c1"><%=  o.fecha_creacion  %></span>
                             <span class="c1 f-row">
                                 <a href="/orden/orden-id/<%= o.id_orden%>"><img src="/images/ver.png" alt=""></a>
@@ -38,6 +41,7 @@
                     <%
                 })
             %>
+               </div>
             </div>
         </div>
     </main>
