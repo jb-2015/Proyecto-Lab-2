@@ -8,7 +8,7 @@ const CambioEstado = require('../models/cambio_estado')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
 const Estado = require('../models/estado');
-const CambioEstado = require('../models/cambio_estado');
+
 
 
 /** PROBANDO */

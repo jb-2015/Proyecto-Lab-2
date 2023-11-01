@@ -3,7 +3,7 @@ const router = express.Router();
 //const connection= require('../config/database')
 const bcryptjs= require('bcryptjs')
 const usuarioController = require('../controllers/usuarioController');
-const { body, validationResult } = require('express-validator');
+
 router.get('/formularioUsuario', (req, res) => {
     res.render('usuarioForm');
 });
@@ -11,13 +11,25 @@ router.get('/formularioUsuario', (req, res) => {
 
   // Utiliza el middleware requireAuth en tus rutas protegidas
 
- 
+  const { body, validationResult } = require('express-validator');
+
 
   // A partir de aquí, puedes definir tus rutas normales
   
 
-router.post('/auth',async (req, res) => {
-    
+  router.post('/auth', [
+    body('dni').notEmpty().isNumeric().isLength({ min: 6 }).withMessage('error dni'),
+    body('clave').notEmpty().isLength({ min: 6 }).withMessage('error clave')
+], async (req, res) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return res.json({
+            ok: false,
+            error: 'Error de validación',
+            errores: errores.array()
+        });
+    }
+
         try {
         const { dni, clave } = req.body;
 

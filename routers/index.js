@@ -9,6 +9,7 @@ const analisisController= require('../controllers/analisisController')
 const pedidoController= require('../controllers/pedidoController')
 const personaController= require('../controllers/personaController')
 const estadoController = require('../controllers/estadoController')
+const { body, validationResult } = require('express-validator');
 
   
   router.use(express.static("public"))
@@ -66,8 +67,8 @@ function checkIncognito(req, res, next) {
 }
 router.get('/cerrar-sesion', cerrarSesion);
 
-  
- 
+
+
 /**ACA VA A ENTRAR CUANDO SE HAGA UN INICIO DE SESION */
   router.get('/page-administrativo', requireAuth,(req, res) => {
     res.render("page-administrativo",{rol:'administrativo'})	
@@ -75,6 +76,7 @@ router.get('/cerrar-sesion', cerrarSesion);
   router.get("/page-paciente",(req,res)=>{
     res.render("page-Paciente",{rol:'paciente'})	
   })
+
 
   router.get("/page-tecnico",(req,res)=>{
     
