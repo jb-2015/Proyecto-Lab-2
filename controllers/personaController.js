@@ -160,12 +160,27 @@ const renderDni = async (req, res) => {
         as: 'analisisOrden',
         attributes: ['descripcion'],
         as: 'analisis'
-      }],
+      },
+      {
+        model: CambioEstado,
+        as: 'cambioEstado',
+        include:[
+          {
+            model: Estado,
+            as: 'estado',
+            attributes:['nombre']
+          }
+        ],
+        order: [['id','DESC']],
+        limit: 1
+      }
+    ],
       where:{
         estado:true
       }
       
     })
+    console.log(ordenes)
     let resOrd=[]
     ordenes.forEach(async (o)=>{
           const cambios = await CambioEstado.findAll({

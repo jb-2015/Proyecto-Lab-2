@@ -41,7 +41,13 @@ const Examen = sequelize.define('examen', {
   fecha_resultado: {
     type: DataTypes.DATE,
     allowNull: false
-  }
+  },
+  
+  id_analisis:{
+      type: DataTypes.INTEGER,
+      allowNull:false
+    }
+  
 }, {
   tableName: 'examen',
   timestamps: false,
