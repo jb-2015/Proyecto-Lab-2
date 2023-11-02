@@ -13,8 +13,8 @@ const Analisis = require('../models/analisis');
 const ValorRef = require('../models/valor_ref');
 const guia_muestra= require('../models/guia_muestra')
 
-ValorRef.belongsTo(Determinacion, { foreignKey: 'id_determinacion' });
-Determinacion.hasMany(ValorRef, { foreignKey: 'id_determinacion' });
+ValorRef.belongsTo(Determinacion, { foreignKey: 'id_determinacion', as: 'determinacion' });
+Determinacion.hasMany(ValorRef, { foreignKey: 'id_determinacion', as: 'valorRef' });
 
 Pedido.belongsTo(Persona, { foreignKey: 'id_persona', as: 'persona' });
 Persona.hasOne(Pedido, { foreignKey: 'id_persona', as: 'pedido' });
@@ -36,8 +36,8 @@ Orden.hasOne(Muestra, { foreignKey: 'id_orden', as: 'muestra' });
 Examen.belongsTo(Orden, { foreignKey: 'id_orden', as: 'orden' });
 Orden.hasMany(Examen, { foreignKey: 'id_orden', as: 'examen' });
 
-Determinacion.belongsTo(Examen, { foreignKey: 'id_examen', as: 'examen'  });
-Examen.hasMany(Determinacion, { foreignKey: 'id_examen', as: 'determinacion'  });
+Determinacion.belongsTo(Examen, { foreignKey: 'id_examen', as: 'examenD'  });
+Examen.hasMany(Determinacion, { foreignKey: 'id_examen', as: 'examenD'  });
 
 CambioEstado.belongsTo(Orden, { foreignKey: 'id_orden', as: 'orden'  });
 Orden.hasMany(CambioEstado, { foreignKey: 'id_orden', as: 'cambioEstado'  });

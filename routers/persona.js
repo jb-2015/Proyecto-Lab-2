@@ -15,9 +15,9 @@ router.use(session({
 }))
 function requireAuth(req, res, next) {
   if (req.session && req.session.user) {
-    return next(); // Si hay una sesión activa, permite el acceso
+    return next(); 
   }
-  res.redirect('/portal-personal'); // Si no hay sesión activa, redirige al inicio de sesión
+  res.redirect('/portal-personal');
 }
 
 
@@ -28,14 +28,13 @@ function checkIncognito(req, res, next) {
     const isIncognito = /\/Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
   
     if (isIncognito) {
-        req.session.destroy(); // Destruye la sesión
-      // Redirige al inicio de sesión
+        req.session.destroy(); 
+     
       } 
-        next(); // Si no es incógnito, continúa con la siguiente ruta o middleware
-      
+        next(); 
   }
   
-  // Utiliza el middleware checkIncognito antes de tus rutas
+ 
   router.use(checkIncognito);
 
 

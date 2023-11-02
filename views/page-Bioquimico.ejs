@@ -1,1 +1,56 @@
-<h1>Pagina del bioquimico</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports') %>
+    <title>Bioquimico</title>
+</head>
+<body>
+    <header> <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de Bioquimico", menu:true, tipoUser: rol}) %></header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4">
+                    <h1>Ordenes en estado Para Validar</h1>
+                </div>
+            </div>
+            <div class="r">
+               <div class="c4 f-column">
+                <%
+                ordenes.forEach(o=>{
+                    %>
+                    <div class="r">
+                        <div class="ordenItem f-row">
+                            
+                            <span class="c1 f-column bg-lightBlue border-on2">
+                                <div class="r "><%= o.dataValues.dni_persona %></div>
+                              
+                                <div class="r"><h3><%= o.dataValues.nombre_persona +" "+ o.dataValues.apellido_persona %></h3></div>
+                            </span>
+                            <span class="c1 f-column">
+                                <div class="r"><%= o.dataValues.descripcion%></div>
+                                <div class="r"><%= o.dataValues.est %></div>
+                            </span>
+                            <span class="c1"><%=  o.fecha_creacion  %></span>
+                            <span class="c1 f-row">
+                                <a href="/determinacion/paraValidar/<%= o.id_orden%>/<%= o.dataValues.genero_persona%>"><img src="/images/ver.png" alt=""></a>
+                                <a href=""><img src="/images/print.png" alt=""></a>
+                                <a href=""><img src="/images/pdf.png" alt=""></a>
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <%
+                })
+            %>
+               </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>

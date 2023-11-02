@@ -222,7 +222,7 @@ const listarPorID = async (req,res)=>{
     WHERE ce.id = (
         SELECT MAX(ce2.id)
         FROM cambio_estado ce2
-        WHERE ce2.id_orden = o.id_orden and ce.id_estado=1
+        WHERE ce2.id_orden = o.id_orden and ce.id_estado=2
     )`
 
       sequelize.query(query2,{model: Orden,mapToModel: true,raw: false})
@@ -239,7 +239,34 @@ const listarPorID = async (req,res)=>{
       
   }
 
+  const buscarParaValidar = async (cback)=>{
+    
+    const query2 = `SELECT o.id_orden ,a.descripcion, e.nombre as est,o.fecha_creacion, per.nombre as nombre_persona,per.apellido as apellido_persona,per.dni as dni_persona, per.genero as genero_persona
+    FROM orden o
+    INNER JOIN cambio_estado ce ON o.id_orden = ce.id_orden 
+    JOIN estado as e on e.id_estado=ce.id_estado 
+    JOIN analisis as a on a.id_analisis=o.id_analisis
+    JOIN pedido as p on p.id_pedido=o.id_pedido
+    JOIN persona as per on per.id_persona=p.id_persona
+    WHERE ce.id = (
+        SELECT MAX(ce2.id)
+        FROM cambio_estado ce2
+        WHERE ce2.id_orden = o.id_orden and ce.id_estado=4
+    )`
 
+      sequelize.query(query2,{model: Orden,mapToModel: true,raw: false})
+      .then(ordenes => {
+        // Aquí tenemos la lista de órdenes que cumplen con los criterios
+        cback(ordenes)
+        console.log(ordenes);
+      })
+      .catch(err => {
+        console.error('Error:', err);
+      });
+    
+
+      
+  }
 module.exports = {
   obtenerDescripcionesAnalisis,
   crearOrden,
@@ -248,5 +275,6 @@ module.exports = {
   obtenerDatosOrdenes,
   buscarPorId,
   listarPorID,
-  buscarPorEstado
+  buscarPorEstado,
+  buscarParaValidar
 };

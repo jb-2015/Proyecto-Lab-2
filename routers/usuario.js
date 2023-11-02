@@ -55,7 +55,7 @@ router.get('/formularioUsuario', (req, res) => {
         }
 
         req.session.user = usuario.id_usuario;
-
+console.log(usuario.rol)
         
 		if (usuario.rol === 'paciente') {
 			res.json({

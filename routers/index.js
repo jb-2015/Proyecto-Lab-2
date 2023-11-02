@@ -86,8 +86,10 @@ router.get('/cerrar-sesion', cerrarSesion);
     	
   })
 
-  router.get("/page-bioquim",(req,res)=>{
-    res.render("page-Bioquimico",{rol:'bioquimico'})	
+  router.get("/page-bioquimico",(req,res)=>{
+    ordenController.buscarParaValidar(ordenes=>{
+    res.render("page-Bioquimico",{rol:'bioquimico',ordenes})	
+  })
   })
   //--------------------------------------------------------------------
   
