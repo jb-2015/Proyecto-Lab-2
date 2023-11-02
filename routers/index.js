@@ -109,18 +109,18 @@ router.get('/cerrar-sesion', cerrarSesion);
   
   
   
-  router.get("/page-create-orden/:id_persona",requireAuth,(req,res)=>{
+  router.get("/page-create-orden/:id_persona",requireAuth, async (req,res)=>{
     const {id_persona}=req.params
     let person
 
-    personaController.buscarPorId(id_persona,p=>{
+    await  personaController.buscarPorId(id_persona,p=>{
       person=p
     })
     let estados
-    estadoController.list(est=>{
+    await estadoController.list(est=>{
       estados=est
     })
-    analisisController.obtenerAnalisis(listAnalisis =>{
+    await analisisController.obtenerAnalisis(listAnalisis =>{
       res.render('crearOrden',{id_persona,listAnalisis,person,estados})
     })
     
