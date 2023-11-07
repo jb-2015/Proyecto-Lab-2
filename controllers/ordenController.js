@@ -5,6 +5,7 @@ const Analisis = require('../models/analisis');
 const Examen = require('../models/examen');
 const Muestra = require('../models/muestra');
 const CambioEstado = require('../models/cambio_estado')
+const GuiaMuestra= require('../models/guia_muestra')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
 const Estado = require('../models/estado');
@@ -126,9 +127,28 @@ const listarPorID = async (req,res)=>{
           ],
           as : 'pedido'
         },{
-          model:Analisis,
-          attributes:['descripcion','tipo'],
-          as:'analisis'
+          model:Examen,
+          as:'examen',
+          include:[
+            {
+              model: Analisis,
+              as: 'analisis',
+              attributes:['id_analisis','descripcion']
+            }
+          ]
+        },
+        {
+          model: CambioEstado,
+          as: 'cambioEstado',
+          include:[
+            {
+              model:Estado,
+              as: 'estado',
+              attributes:['nombre']
+            }
+          ],
+          order: [['id','DESC']],
+          limit: 1
         }
       ],
       where:{
@@ -136,18 +156,26 @@ const listarPorID = async (req,res)=>{
       }
     })
     const muestras= await Muestra.findAll({
-      attributes:['tipo_muestra','entregado','fecha_recoleccion'],
+      attributes:['id_muestra','entregado','fecha_recoleccion'],
       include:[
         {
           model: Orden,
           attributes:[],
           as: 'orden'
+        },
+        {
+          model: GuiaMuestra,
+          as: 'guia_muestra',
+          attributes:['id_guiaM','g_descripcion']
         }
       ],
       where:{
         id_orden:id
       }
     })
+
+    console.log(orden)
+
     if(orden){
       res.render('vistaOrden',{orden,muestras,rol:''})
     }

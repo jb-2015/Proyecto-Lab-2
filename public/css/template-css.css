@@ -157,3 +157,6 @@ button:hover{
 .bg-lightBlue{
 	background: linear-gradient(90deg,#055582 1%,#1db3d4 40%,#68c4e5 85%);
 }
+.t-red{
+	color:red;
+}
