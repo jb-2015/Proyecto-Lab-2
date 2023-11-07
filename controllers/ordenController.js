@@ -110,7 +110,7 @@ const buscarPorId =async (req, res) => {
 };
 
 const listarPorID = async (req,res)=>{
-    const {id}= req.params
+    const {id,rol}= req.params
 
     const orden= await Orden.findOne({
       attributes:['id_orden','estado','fecha_creacion'],
@@ -177,7 +177,7 @@ const listarPorID = async (req,res)=>{
     console.log(orden)
 
     if(orden){
-      res.render('vistaOrden',{orden,muestras,rol:''})
+      res.render('vistaOrden',{orden,muestras,rol:rol})
     }
 
 }
@@ -265,14 +265,16 @@ const listarPorID = async (req,res)=>{
     FROM orden o
     INNER JOIN cambio_estado ce ON o.id_orden = ce.id_orden 
     JOIN estado as e on e.id_estado=ce.id_estado 
-    JOIN analisis as a on a.id_analisis=o.id_analisis
+    JOIN examen as ex on ex.id_orden = o.id_orden
+    JOIN analisis as a on a.id_analisis=ex.id_analisis
     JOIN pedido as p on p.id_pedido=o.id_pedido
     JOIN persona as per on per.id_persona=p.id_persona
     WHERE ce.id = (
         SELECT MAX(ce2.id)
         FROM cambio_estado ce2
-        WHERE ce2.id_orden = o.id_orden and ce.id_estado=2
-    )`
+        WHERE ce2.id_orden = o.id_orden and ce.id_estado=${est}
+    )
+    GROUP BY o.id_orden`
 
       sequelize.query(query2,{model: Orden,mapToModel: true,raw: false})
       .then(ordenes => {

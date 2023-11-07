@@ -9,6 +9,8 @@ const Pedido = require('../models/pedido');
 const Persona = require('../models/persona');
 const Analisis = require('../models/analisis');
 const ValorRef = require('../models/valor_ref');
+const guia_muestra = require('../models/guia_muestra');
+const sequelize = require('../config/database');
 const list = async (req, res) => {
   try {
     const examen = await Examen.findAll();
@@ -67,8 +69,57 @@ const crearExamen = async (id_o,descripcion,resultado,fecha_result,id_analisis)=
     await Examen.create(nuevoExamen)
 }
 
+const getForReg = async (id,callBack)=>{
+  Examen.findOne({
+    include:[
+      {
+        model: Analisis,
+        as: 'analisis',
+        attributes:['id_analisis','descripcion'],
+        include:[
+          {
+            model: Determinacion,
+            as: 'determinacion',
+            include:[
+              {
+                model: ValorRef,
+                as:'valorRef'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        model:Orden,
+        as:'orden',
+        include:[
+          {
+            model:Pedido,
+            as: 'pedido',
+            include:[
+              {
+                model: Persona,
+                as:'persona',
+                attributes:['genero',[sequelize.literal('YEAR(CURDATE()) - YEAR(fecha_nacimient)'), 'edad']]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    where: {
+      id_examen:id
+    }
+  }).then(examen=>{
+    console.log(examen)
+    
+    callBack(examen)
+  })
+}
+
 
 module.exports = {
+  getForReg,
   cambiarDatosExamen,
   list,
   getById,

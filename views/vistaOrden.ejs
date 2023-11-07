@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden,titulo:true,menu:true,tipoUser: rol })%>
+        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden+' '+rol,titulo:true,menu:true,tipoUser: rol })%>
     </header>
     <main>
         <div class="tContainer">
@@ -23,6 +23,7 @@
                     </div>
                     <div class="r">
                        <div class="c4 f-column">
+                            <h1> <%= e.analisis.descripcion %> </h1>
                             <h3> Estado de Orden: <%= orden.cambioEstado[0].estado.nombre %></h3>
                             <h4>Muestras:</h4>
                             <ul>
@@ -61,7 +62,7 @@
             <div class="r">
                 <% if(rol == 'tecnico'){
                     %>
-                    <div class="c1"><button>Registrar Valores</button></div>
+                    <div class="c1"><button><a href="/registrar-valores/<%= e.id_examen %>">Registrar Valores</a></button></div>
                     <div class="c1"><button>Para validar</button></div>
                     <div class="c1"><button></button></div>
                     <div class="c1"><button></button></div>

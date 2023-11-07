@@ -10,7 +10,12 @@ const pedidoController= require('../controllers/pedidoController')
 const personaController= require('../controllers/personaController')
 const estadoController = require('../controllers/estadoController')
 const ordenController = require('../controllers/ordenController')
+const examenController= require('../controllers/examenController')
 const { body, validationResult } = require('express-validator');
+
+//IMPORTAR EL MODELO PARA EL REGISTRO DE VALORES
+  const RegistroValores= require('../models/registro_valores')
+//*********************************** */
 
   
   router.use(express.static("public"))
@@ -80,7 +85,7 @@ router.get('/cerrar-sesion', cerrarSesion);
 
 
   router.get("/page-tecnico",(req,res)=>{
-    ordenController.buscarPorEstado(1,ordenes=>{
+    ordenController.buscarPorEstado(2,ordenes=>{
         res.render("page-Tecnico",{rol:'tecnico', ordenes})
     })
     	
@@ -125,10 +130,38 @@ router.get('/cerrar-sesion', cerrarSesion);
     })
     
   })
+
+  router.post("/guardar-valores",(req,res)=>{
+      const {id_determinacion,id_examen,valor} = req.body
+
+      const nuevoRegistro= {
+        id_determinacion: id_determinacion,
+        id_examen: id_examen,
+        valor:valor
+      }
+
+      RegistroValores.create(nuevoRegistro)
+      .then(result=>{
+        console.log("Se creo el registro con id: "+res.id_reg)
+        res.json({OK:true})
+      })
+
+
+  })
   
  
-////////////////////TOKEN////////////////////////////////////////////////
+////////////////////REGISTRAR VALORES////////////////////////////////////////////////
 
+router.get('/registrar-valores/:id',async (req,res)=>{
+  const {id} = req.params
+  await examenController.getForReg(id,(examen)=>{
+      const persona = examen.orden.pedido.persona.get({plain:true})
+      console.log("PERSONA: " +persona)
+      res.render('registrar_valores',{examen,persona})
+  })
+
+
+})
 
 
 
@@ -156,6 +189,7 @@ const pedidoRouter = require('./pedido');
 const personaRouter = require('./persona');
 const usuarioRouter = require('./usuario');
 const valorRefRouter = require('./valor_ref');
+const { resetWatchers } = require('nodemon/lib/monitor/watch');
 // Usar las rutas individuales
 router.use('/analisis', analisisRouter);
 router.use('/cambio_estado', cambioEstadoRouter);

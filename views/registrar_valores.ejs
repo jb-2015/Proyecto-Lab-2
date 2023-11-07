@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Valores</title>
+    <%- include('imports/imports')%>
+</head>
+<body>
+    <input type="hiden" value="<%= examen.id_examen%>" id="id_examen">
+    <header>
+        <%- include('parcial/nav',{logo:true, titulo:true,value:'Registrar Valores',menu:true,tipoUser:'tecnico'}) %>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4">
+                    <table>
+                        <tr class="cabecera">
+                            <td>Determinacion</td>
+                            <td>resultado</td>
+                            <td>unidad</td>
+                            <td>Val. Max.</td>
+                            <td>Val. Min.</td>
+                        </tr>
+                        <% examen.dataValues.analisis.determinacion.forEach(det=>{
+                            %>
+                            <tr>
+                                <td><%=det.nombre%></td>
+                                <td><input type="text" id="<%= det.id_determinacion %>" class="inputDet"></td>
+                                <td><%= det.unidad_medida %></td>
+                                <td><% det.valorRef.forEach(vr=>{
+                                    let rango = ""
+                                    if(persona.edad<17&&persona.edad<51){
+                                        rango="18-50"
+                                    }else{
+                                        rango="51-80"
+                                    }
+
+                                    if(vr.sexo==persona.genero && vr.rango_edad==rango){
+                                    %>
+                                        <%= vr.val_max %>
+                                    <%
+                                    
+                                    }
+
+                                })  %> </td>
+                                <td>
+                                    <% det.valorRef.forEach(vr=>{
+                                        let rango = ""
+                                        if(persona.edad<17&&persona.edad<51){
+                                            rango="18-50"
+                                        }else{
+                                            rango="51-80"
+                                        }
+    
+                                        if(vr.sexo==persona.genero && vr.rango_edad==rango){
+                                        %>
+                                            <%= vr.val_min %>
+                                        <%
+                                        
+                                        }
+    
+                                    })  %>
+                                </td>
+                            </tr>
+                            <%
+                        }) %>
+                    </table>
+                    
+                </div>
+            </div>
+            <div class="r"><div class="c3"><button id="guardarResult">Guardar</button></div></div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+</html>
