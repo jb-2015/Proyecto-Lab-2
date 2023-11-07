@@ -19,6 +19,17 @@ const buscarPorAnalisis= async (req,res)=>{
     }
 }
 
+const getByAnalisis = async (id,callback)=>{
+        Guia_muestra.findAll({
+            attributes:['id_guiaM','id_analisis','g_descripcion'],
+            where: {
+                id_analisis: id
+            }
+        }).then(guiaMuestras =>{
+            callback(guiaMuestras)
+        })
+}
+
 
 
 
@@ -26,5 +37,6 @@ const buscarPorAnalisis= async (req,res)=>{
 
 
 module.exports = {
-  buscarPorAnalisis
+  buscarPorAnalisis,
+  getByAnalisis
 };

@@ -23,6 +23,7 @@ body{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	flex-wrap: wrap;
 }
 
 .c1{
@@ -86,7 +87,13 @@ input[type="text"],input[type="number"],input[type="password"],input[type="date"
 	text-align: center;
 	background-color: white;
 }
-
+ table input[type="text"] {
+	 width: 70% !important;
+ }
+ table td{
+	 padding: 5px 10px 5px 10px;
+ }
+ 
 
 button{
 	width: 100%;
@@ -100,6 +107,10 @@ button{
 	font-weight: bold;
 	color: white;
 
+}
+button a{
+	text-decoration: none;
+	color:inherit;
 }
 .center{
 	margin:auto;
@@ -155,4 +166,7 @@ button:hover{
 
 .bg-lightBlue{
 	background: linear-gradient(90deg,#055582 1%,#1db3d4 40%,#68c4e5 85%);
+}
+.t-red{
+	color:red;
 }

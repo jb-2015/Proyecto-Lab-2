@@ -9,48 +9,77 @@
 </head>
 <body>
     <header>
-        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden,titulo:true,menu:true,tipoUser: rol })%>
+        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden+' '+rol,titulo:true,menu:true,tipoUser: rol })%>
     </header>
     <main>
         <div class="tContainer">
+            <%  orden.dataValues.examen.forEach(e=>{ %>
             <div class="r">
                 <div class="c4 f-column border-on">
                     <div class="r border-on">
                         <div class="c2"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
                         <div class="c1"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
-                        <div class="c1"> <h2><%= orden.pedido.persona.fecha_creacion %> </h2></div>
+                        <div class="c1"> <h2><%= orden.fecha_creacion %> </h2></div>
                     </div>
                     <div class="r">
                        <div class="c4 f-column">
-                            <h3> Estado de Orden: <%= orden.estado %></h3>
+                            <h1> <%= e.analisis.descripcion %> </h1>
+                            <h3> Estado de Orden: <%= orden.cambioEstado[0].estado.nombre %></h3>
                             <h4>Muestras:</h4>
                             <ul>
                                 <% muestras.forEach(m=>{
                                     %>
-                                        <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.tipo_muestra %></li>
+                                    <li class="<% if(!m.entregado){ %> t-red <% }%>"> <%= m.guia_muestra.g_descripcion %></li>
                                     <%
-                                })%>      
+                                })
+                                    
+                             %>
+                               <!-- <% muestras.forEach(m=>{
+                                    %>
+                                        <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.guia_muestra.g_descripcion %></li>
+                                    <%
+                                })%>      -->
                             </ul>
                             
                        </div>
                     </div>
                     <div class="r border-on ">
                         <div class="c2">
-                            <h3><strong>Analisis:</strong> <%- orden.analisis.descripcion %></h3>
+                            <h3><strong>Analisis: </strong> </h3>
+                            <ul>
+                                <% orden.dataValues.examen.forEach(ex=>{%>
+                                    <li> <%= ex.analisis.descripcion %> </li>
+                                <% }) %>
+                            </ul>
                         </div>
                         <div class="c2">
-                            <h3>Tipo: <%- orden.analisis.tipo %></h3>
+                            <h3>Tipo: </h3>
                         </div>
                     </div>
                     
                 </div>
             </div>
             <div class="r">
-                <div class="c1"><button>Registrar Valores</button></div>
-                <div class="c1"><button>Para validar</button></div>
-                <div class="c1"><button></button></div>
-                <div class="c1"><button></button></div>
+                <% if(rol == 'tecnico'){
+                    %>
+                    <div class="c1"><button><a href="/registrar-valores/<%= e.id_examen %>">Registrar Valores</a></button></div>
+                    <div class="c1"><button>Para validar</button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="c1"><button></button></div>
+                    <%
+                }
+                if(rol=='bioquimico'){
+                    %>
+                    <div class="c1"><button>Validar</button></div>
+                    <div class="c1"><button>Verificar</button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="c1"><button></button></div>
+                    <%
+                }
+                %>
+                
             </div>
+            <% }) %>
         </div>
     </main>
     <footer></footer>

@@ -7,12 +7,6 @@ const ValorRef = sequelize.define('ValorRef', {
     primaryKey: true,
     autoIncrement: true
   },
-  nombre: {
-    type: DataTypes.STRING(30),
-    allowNull: true,
-    defaultValue: null,
-    collate: 'utf8mb4_spanish2_ci'
-  },
   sexo: {
     type: DataTypes.CHAR(1),
     allowNull: true,

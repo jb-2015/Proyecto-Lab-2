@@ -7,7 +7,7 @@ const Determinacion = sequelize.define('determinacion', {
     primaryKey: true,
     autoIncrement: true
   },
-  id_examen: {
+  id_analisis: {
     type: DataTypes.INTEGER,
     allowNull: true,
     defaultValue: null

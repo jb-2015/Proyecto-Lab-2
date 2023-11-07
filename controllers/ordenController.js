@@ -5,9 +5,12 @@ const Analisis = require('../models/analisis');
 const Examen = require('../models/examen');
 const Muestra = require('../models/muestra');
 const CambioEstado = require('../models/cambio_estado')
+const GuiaMuestra= require('../models/guia_muestra')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
 const Estado = require('../models/estado');
+const examenController= require('../controllers/examenController')
+const muestraControler= require('../controllers/muestraController')
 
 
 
@@ -107,7 +110,7 @@ const buscarPorId =async (req, res) => {
 };
 
 const listarPorID = async (req,res)=>{
-    const {id}= req.params
+    const {id,rol}= req.params
 
     const orden= await Orden.findOne({
       attributes:['id_orden','estado','fecha_creacion'],
@@ -124,9 +127,28 @@ const listarPorID = async (req,res)=>{
           ],
           as : 'pedido'
         },{
-          model:Analisis,
-          attributes:['descripcion','tipo'],
-          as:'analisis'
+          model:Examen,
+          as:'examen',
+          include:[
+            {
+              model: Analisis,
+              as: 'analisis',
+              attributes:['id_analisis','descripcion']
+            }
+          ]
+        },
+        {
+          model: CambioEstado,
+          as: 'cambioEstado',
+          include:[
+            {
+              model:Estado,
+              as: 'estado',
+              attributes:['nombre']
+            }
+          ],
+          order: [['id','DESC']],
+          limit: 1
         }
       ],
       where:{
@@ -134,40 +156,50 @@ const listarPorID = async (req,res)=>{
       }
     })
     const muestras= await Muestra.findAll({
-      attributes:['tipo_muestra','entregado','fecha_recoleccion'],
+      attributes:['id_muestra','entregado','fecha_recoleccion'],
       include:[
         {
           model: Orden,
           attributes:[],
           as: 'orden'
+        },
+        {
+          model: GuiaMuestra,
+          as: 'guia_muestra',
+          attributes:['id_guiaM','g_descripcion']
         }
       ],
       where:{
         id_orden:id
       }
     })
+
+    console.log(orden)
+
     if(orden){
-      res.render('vistaOrden',{orden,muestras,rol:''})
+      res.render('vistaOrden',{orden,muestras,rol:rol})
     }
 
 }
-  const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion,estadoOrden,mstrs) => {
+  const crearOrden = async (idPedido, estado, fechaCreacion,estadoOrden,analisisMuestras) => {
     try {
       const nuevaOrden = {
         id_pedido: idPedido,
-        id_analisis: idAnalisis,
+        id_analisis: null,
         estado: estado,
-        fecha_creacion: fechaCreacion
+        fecha_creacion: fechaCreacion,
+        prioridad: 1
       };
   
       const ordenCreada = await Orden.create(nuevaOrden);
       const nuevoCambioEstado= {
         id_estado:estadoOrden,
-        id_orden: ordenCreada.id_orden
+        id_orden: ordenCreada.id_orden,
+        fecha: fecha_hoy()
       }
       const cambioEstado= await CambioEstado.create(nuevoCambioEstado)
 
-      mstrs.forEach(m=>{
+      /*mstrs.forEach(m=>{
         const fecha= m.entregado ? fecha_hoy() : null
         Muestra.create({
           id_orden: ordenCreada.id_orden,
@@ -176,8 +208,25 @@ const listarPorID = async (req,res)=>{
           entregado: m.entregado
           
         })
-      })
+      })*/
 
+      console.log("MUESTRAS :" + analisisMuestras[0].muestras)
+      console.log("ANALISIS: " + analisisMuestras)
+      
+
+
+      
+      try{
+        analisisMuestras.forEach(async a=>{
+          await examenController.crearExamen(ordenCreada.id_orden,"",null,null,a.id_analisis)
+          a.muestras.forEach(async m=>{
+            await muestraControler.crear(ordenCreada.id_orden, m.entregado ? fecha_hoy() : null,m.entregado,m.dato)
+          })
+        })
+        
+      }catch(error){
+        throw new Error ("Error al Crear Examen")
+      }
 
   
       return ordenCreada;
@@ -216,14 +265,16 @@ const listarPorID = async (req,res)=>{
     FROM orden o
     INNER JOIN cambio_estado ce ON o.id_orden = ce.id_orden 
     JOIN estado as e on e.id_estado=ce.id_estado 
-    JOIN analisis as a on a.id_analisis=o.id_analisis
+    JOIN examen as ex on ex.id_orden = o.id_orden
+    JOIN analisis as a on a.id_analisis=ex.id_analisis
     JOIN pedido as p on p.id_pedido=o.id_pedido
     JOIN persona as per on per.id_persona=p.id_persona
     WHERE ce.id = (
         SELECT MAX(ce2.id)
         FROM cambio_estado ce2
-        WHERE ce2.id_orden = o.id_orden and ce.id_estado=2
-    )`
+        WHERE ce2.id_orden = o.id_orden and ce.id_estado=${est}
+    )
+    GROUP BY o.id_orden`
 
       sequelize.query(query2,{model: Orden,mapToModel: true,raw: false})
       .then(ordenes => {

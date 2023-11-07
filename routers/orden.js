@@ -8,7 +8,7 @@ const ordenController = require('../controllers/ordenController');
 router.get('/', ordenController.list);
 router.get('/ordenB/:id', ordenController.getById);
 router.get('/orden/:id', ordenController.obtenerDatosOrdenes);
-router.get('/orden-id/:id', ordenController.listarPorID)
+router.get('/orden-id/:id/:rol', ordenController.listarPorID)
 router.get('/ordenUnica/:id', ordenController.buscarPorId);
 router.get('/ordBB', ordenController.buscarParaValidar);
 

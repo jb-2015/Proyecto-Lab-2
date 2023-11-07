@@ -20,9 +20,9 @@ const Orden = sequelize.define('orden', {
     defaultValue: null
   },
   estado: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    defaultValue: null,
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
     collate: 'utf8mb4_spanish2_ci'
   },
   fecha_creacion: {

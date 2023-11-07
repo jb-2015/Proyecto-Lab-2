@@ -35,21 +35,28 @@
                                 <input type="text" id="diagnostico" placeholder="Diagnostico" >
                                 
                             </div>
-                            <input type="hidden" class="form-control" id="id_persona" value="<%= person.persona.id_persona %>">
-                            <input type="hidden" class="form-control" id="dni_persona" value="<%= person.persona.dni %>">
-                            <div class="r"><input type="text" id="nombre_medico" placeholder="Nombre Medico"></div>
-                            <div class="r"><input type="text" id="nro_matricula" placeholder="Nº Matricula"></div>
-    
-                            <label for="analisisList">Elegir Analisis</label>
-                            <select name="analisisList" id="analisisList">
-                                <option value="">-- Seleccione analisis --</option>
-                                <% listAnalisis.forEach(a=>{
-                                    %>
-                                    <option value="<%= a.id_analisis %>"> <%= a.descripcion %></option>
-                                    <%
-                                }) %>
+                            
+                            <div class="r f-column">
+                                <input type="hidden" class="form-control" id="id_persona" value="<%= person.persona.id_persona %>">
+                                <input type="hidden" class="form-control" id="dni_persona" value="<%= person.persona.dni %>">
+                                <div class="r"><input type="text" id="nombre_medico" placeholder="Nombre Medico"></div>
+                                <div class="r"><input type="text" id="nro_matricula" placeholder="Nº Matricula"></div>
+        
+                                <label for="analisisList">Elegir Analisis</label>
+                                <select name="analisisList" id="analisisList">
+                                    <option value="">-- Seleccione analisis --</option>
+                                    <% listAnalisis.forEach(a=>{
+                                        %>
+                                        <option value="<%= a.id_analisis %>"> <%= a.descripcion %></option>
+                                        <%
+                                    }) %>
+                                    
+                                </select>
+                            </div>
+                            <div class="r" id="listAnalisis">
                                 
-                            </select>
+
+                            </div>
                             <div class="r">
                                 <div class="c4">
                                     <ul id="muestrasSolicitadas">

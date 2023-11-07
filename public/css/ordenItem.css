@@ -11,3 +11,22 @@
     width: 45px;
     aspect-ratio: 1.5/1;
 }
+
+.itemAnalisis{
+   
+    gap:10px;
+    min-width: 200px;
+    background-color: purple;
+    color: white;
+    padding: 0 5px 0 5px;
+    border-radius: 5px;
+}
+.itemAnalisis .crossClose:hover {
+    cursor: pointer;
+    color: orangered;
+}
+.muestraAnalisis{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}

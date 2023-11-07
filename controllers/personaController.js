@@ -181,9 +181,10 @@ const renderDni = async (req, res) => {
       
     })
     console.log(ordenes)
+    
     let resOrd=[]
     ordenes.forEach(async (o)=>{
-          const cambios = await CambioEstado.findAll({
+          const cambios = await CambioEstado.findOne({
             include: [{
               model:Orden,
               where:{
@@ -198,7 +199,8 @@ const renderDni = async (req, res) => {
               }
             ],
             order: [['id','DESC']],
-            limit: 1
+            Limit: 1
+            
           })
           resOrd.push({
             orden: o,
@@ -207,7 +209,8 @@ const renderDni = async (req, res) => {
 
     })
 
-
+    console.log("CAMBIOS DE ESTADO")
+    console.log(resOrd)
 
     if (persona) {  
      res.render('panelPaciente',{ persona, ordenes })
