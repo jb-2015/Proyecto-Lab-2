@@ -14,20 +14,8 @@ const Examen = sequelize.define('examen', {
     allowNull: true,
     defaultValue: null
   },
-  nombre_examen: {
-    type: DataTypes.STRING(30),
-    allowNull: true,
-    defaultValue: null,
-    collate: 'utf8mb4_spanish2_ci'
-  },
   descripcion: {
     type: DataTypes.STRING(200),
-    allowNull: true,
-    defaultValue: null,
-    collate: 'utf8mb4_spanish2_ci'
-  },
-  unidad_medida: {
-    type: DataTypes.STRING(15),
     allowNull: true,
     defaultValue: null,
     collate: 'utf8mb4_spanish2_ci'
@@ -40,7 +28,7 @@ const Examen = sequelize.define('examen', {
   },
   fecha_resultado: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: true
   },
   
   id_analisis:{

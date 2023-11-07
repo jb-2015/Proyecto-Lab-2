@@ -8,6 +8,8 @@ const CambioEstado = require('../models/cambio_estado')
 const sequelize = require('../config/database'); // Asegúrate de importar sequelize y configurarlo correctamente
 const consulta= require('../db/consulta'); 
 const Estado = require('../models/estado');
+const examenController= require('../controllers/examenController')
+const muestraControler= require('../controllers/muestraController')
 
 
 
@@ -151,23 +153,25 @@ const listarPorID = async (req,res)=>{
     }
 
 }
-  const crearOrden = async (idPedido, idAnalisis, estado, fechaCreacion,estadoOrden,mstrs) => {
+  const crearOrden = async (idPedido, estado, fechaCreacion,estadoOrden,analisisMuestras) => {
     try {
       const nuevaOrden = {
         id_pedido: idPedido,
-        id_analisis: idAnalisis,
+        id_analisis: null,
         estado: estado,
-        fecha_creacion: fechaCreacion
+        fecha_creacion: fechaCreacion,
+        prioridad: 1
       };
   
       const ordenCreada = await Orden.create(nuevaOrden);
       const nuevoCambioEstado= {
         id_estado:estadoOrden,
-        id_orden: ordenCreada.id_orden
+        id_orden: ordenCreada.id_orden,
+        fecha: fecha_hoy()
       }
       const cambioEstado= await CambioEstado.create(nuevoCambioEstado)
 
-      mstrs.forEach(m=>{
+      /*mstrs.forEach(m=>{
         const fecha= m.entregado ? fecha_hoy() : null
         Muestra.create({
           id_orden: ordenCreada.id_orden,
@@ -176,8 +180,25 @@ const listarPorID = async (req,res)=>{
           entregado: m.entregado
           
         })
-      })
+      })*/
 
+      console.log("MUESTRAS :" + analisisMuestras[0].muestras)
+      console.log("ANALISIS: " + analisisMuestras)
+      
+
+
+      
+      try{
+        analisisMuestras.forEach(async a=>{
+          await examenController.crearExamen(ordenCreada.id_orden,"",null,null,a.id_analisis)
+          a.muestras.forEach(async m=>{
+            await muestraControler.crear(ordenCreada.id_orden, m.entregado ? fecha_hoy() : null,m.entregado,m.dato)
+          })
+        })
+        
+      }catch(error){
+        throw new Error ("Error al Crear Examen")
+      }
 
   
       return ordenCreada;

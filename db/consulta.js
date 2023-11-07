@@ -53,6 +53,8 @@ Analisis.hasMany(Examen,{foreignKey:'id_analisis', as: 'examen'})
 Registro_valores.belongsTo(Examen,{foreignKey:'id_examen', as: 'examen'})
 Examen.hasMany(Registro_valores,{foreignKey:'id_examen', as: 'examen'})
 
+Muestra.belongsTo(guia_muestra,{foreignKey:'id_examen', as: 'guia_muestra'})
+guia_muestra.hasMany(Muestra,{foreignKey:'id_examen', as: 'muetra'})
 
 
   

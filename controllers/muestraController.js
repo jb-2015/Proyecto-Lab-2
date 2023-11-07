@@ -23,7 +23,18 @@ const getById = async (req, res) => {
   }
 };
 
+const crear = async (id_orden,fecha_recoleccion,entregado,id_guiaM)=>{
+    const nuevaMuestra= {
+      id_orden: id_orden,
+      fecha_recoleccion:fecha_recoleccion,
+      entregado: entregado,
+      id_guiaM:id_guiaM
+    }
+    Muestra.create(nuevaMuestra)
+}
+
 module.exports = {
   list,
   getById,
+  crear
 };

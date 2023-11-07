@@ -1,6 +1,8 @@
 
 
 const  Analisis  = require('../models/analisis');
+const GuiaMuestra = require('../models/guia_muestra')
+const guiaMuestraController = require('../controllers/guiaMuestraController')
 
 
 const obtenerAnalisis = async (callback) => {
@@ -13,6 +15,23 @@ const obtenerAnalisis = async (callback) => {
   }
 };
 
+const buscarPorId= async (id,callback)=>{
+  try{
+    Analisis.findByPk(id)
+    .then(async (analisis)=>{
+      console.log('ANALISIS BUSCADO POR ID: '+ analisis)
+      await guiaMuestraController.getByAnalisis(id,(muestras)=>{
+        callback({OK:true,analisis: analisis,muestras:muestras})
+      })
+      
+      
+    })
+  }catch(error){
+    callback({OK: false, data: error})
+  }
+}
+
 module.exports = {
-  obtenerAnalisis
+  obtenerAnalisis,
+  buscarPorId
 };

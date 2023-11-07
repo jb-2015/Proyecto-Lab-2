@@ -24,7 +24,7 @@ const Muestra = sequelize.define('muestra', {
     allowNull: true,
     defaultValue: null
   },
-  tipo_muestra: {
+  id_guiaM: {
     type: DataTypes.STRING(30),
     allowNull: true,
     defaultValue: null,

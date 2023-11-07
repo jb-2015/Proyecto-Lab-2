@@ -55,11 +55,24 @@ const cambiarDatosExamen = (req, res) => {
   });
 }
 
+const crearExamen = async (id_o,descripcion,resultado,fecha_result,id_analisis)=>{
+    const nuevoExamen={
+      id_orden: id_o,
+      descripcion:descripcion,
+      resultado: resultado,
+      fecha_resultado:fecha_result,
+      id_analisis: id_analisis
+    }
+
+    await Examen.create(nuevoExamen)
+}
+
 
 module.exports = {
   cambiarDatosExamen,
   list,
   getById,
+  crearExamen,
 
   ingresarExamen: async (req, res) => {
     try {
