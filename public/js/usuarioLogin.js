@@ -7,8 +7,8 @@ document.getElementById('frm-crear-usuario').addEventListener('submit', async (e
 const dni = document.getElementById('dni').value;
 const clave = document.getElementById('clave').value;
 const rol = document.getElementById('rol').value;
-const estado = document.getElementById('estado').checked ? 1 : 0;
-    
+//const estado = document.getElementById('estado').checked ? 1 : 0;
+
 
 try {
 
@@ -29,27 +29,30 @@ if (!esDniEncontrado) {
         body: JSON.stringify({
             dni,
             clave,
-            rol,
-            estado
+            rol
+            //estado
         })
     });
 
     const data = await response.json();
 
     if (response.ok) {
-       
+     
+       document.getElementById('dni').value = '';
+document.getElementById('clave').value = '';
+//document.getElementById('rol').value = '';
         alert('Usuario creado correctamente')
+        window.location.href='/page-Gerente'
     } else {
-        alert('Error al crear Usuario:');
+        document.getElementById('clave').value = '';
+        alert('El Usuario ya tiene una cuenta');
     }
 
 } catch (error) {
     console.error('Error:', error);
 }
 })
-document.getElementById('dni').value = '';
-document.getElementById('clave').value = '';
-document.getElementById('rol').value = '';
-document.getElementById('estado').checked = false;
+
+//document.getElementById('estado').checked = false;
 
 });

@@ -14,14 +14,33 @@
 
 .itemAnalisis{
    
-    gap:10px;
+    gap:2px;
     min-width: 200px;
-    background-color: purple;
-    color: white;
-    padding: 0 5px 0 5px;
+    background-color: rgb(54, 160, 192);
+    color: rgb(36, 36, 36);
+    padding: 0px 2px 0 2px; /* Ajusta el espaciado interno según sea necesario */
+    margin-top: 2px; /* Espacio entre elementos */
+    margin-bottom: 2px; 
     border-radius: 5px;
+ 
+}
+.itemAnalisis2{
+   
+    gap:2px;
+    min-width: 200px;
+    background-color: rgb(54, 160, 192);
+    color: rgb(36, 36, 36);
+    padding: 0px 2px 0 2px; /* Ajusta el espaciado interno según sea necesario */
+    margin-top: 2px; /* Espacio entre elementos */
+    margin-bottom: 2px; 
+    border-radius: 5px;
+ 
 }
 .itemAnalisis .crossClose:hover {
+    cursor: pointer;
+    color: orangered;
+}
+.itemAnalisis2 .crossCloseB:hover {
     cursor: pointer;
     color: orangered;
 }
@@ -29,4 +48,27 @@
     list-style: none;
     margin: 0px;
     padding: 0px;
+}
+.muestraAnalisis2{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+.nav-item {
+    display: inline-block;
+    margin-left: 100px; /* Ajusta el margen derecho según sea necesario */
+  
+}
+
+.nav-item a {
+    color: #160505; /* Color del texto del enlace */
+    text-decoration: none; /* Elimina el subrayado predeterminado */
+    padding: 5px 10px; /* Ajusta el relleno para agregar espacio alrededor del texto del enlace */
+    font-size: 20px;
+}
+
+.nav-item a:hover {
+    color: #000000; /* Cambia el color del texto cuando se pasa el cursor sobre el enlace */
+    background-color: #f0f0f0; /* Cambia el color de fondo cuando se pasa el cursor sobre el enlace */
+    border-radius: 5px; /* Agrega esquinas redondeadas */
 }

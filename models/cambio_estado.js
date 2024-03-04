@@ -17,6 +17,11 @@ const CambioEstado = sequelize.define('CambioEstado', {
     allowNull: true,
     defaultValue: null
   },
+  id_examen: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: null
+  },
   fecha: {
     type: DataTypes.DATE,
     allowNull: true,

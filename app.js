@@ -8,7 +8,7 @@ const indexRouter = require('./routers/index');
 const usuarioController = require('./controllers/usuarioController');
 const { check, validationResult } = require('express-validator');
 const cors = require('cors');
-
+const port= 3030;
 app.use(cors());
 
 
@@ -66,8 +66,8 @@ app.put('/usuario/campos', [
 })*/
 
 
-app.listen(3030,()=>{
-	console.log("Servidor iniciado en el puerto 3030")
+app.listen(port,()=>{
+	console.log(`Servidor iniciado en el puerto http://localhost:${port}`)
 })
 
 

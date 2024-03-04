@@ -1,3 +1,6 @@
+const { Op } = require('sequelize');
+
+
 const Examen  = require('../models/examen');
 const Estado = require('../models/estado');
 
@@ -10,6 +13,7 @@ const Persona = require('../models/persona');
 const Analisis = require('../models/analisis');
 const ValorRef = require('../models/valor_ref');
 const guia_muestra = require('../models/guia_muestra');
+const registro_valores = require('../models/registro_valores');
 const sequelize = require('../config/database');
 const list = async (req, res) => {
   try {
@@ -28,6 +32,20 @@ const getById = async (req, res) => {
       res.json(examen);
     } else {
       res.status(404).json({ error: 'Valor de referencia no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const examen = await Examen.findByPk(id);
+    if (examen) {
+      await examen.destroy();
+      res.json({ message: 'Examen eliminado correctamente' });
+    } else {
+      res.status(404).json({ error: 'Examen no encontrado' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -52,7 +70,7 @@ const cambiarDatosExamen = (req, res) => {
       res.json({ mensaje: 'Datos del examen cambiados exitosamente.' });
   })
   .catch(error => {
-      console.error('Error al cambiar datos del examen:', error);
+     
       res.status(500).json({ error: 'Error interno del servidor.' });
   });
 }
@@ -63,12 +81,13 @@ const crearExamen = async (id_o,descripcion,resultado,fecha_result,id_analisis)=
       descripcion:descripcion,
       resultado: resultado,
       fecha_resultado:fecha_result,
-      id_analisis: id_analisis
+      id_analisis: id_analisis,
+      ex_estado:0
     }
 
-    await Examen.create(nuevoExamen)
+    return await Examen.create(nuevoExamen)
 }
-
+/*
 const getForReg = async (id,callBack)=>{
   Examen.findOne({
     include:[
@@ -116,15 +135,212 @@ const getForReg = async (id,callBack)=>{
     callBack(examen)
   })
 }
+*/
+const getForReg = async (id, genero,callBack)=>{
+  try{
+  const examen= await Examen.findOne({
+    include:[
+      {
+        model: Analisis,
+        as: 'analisis',
+        attributes:['id_analisis','descripcion'],
+       
+      },
+      {
+        model:Orden,
+        as:'orden',
+        include:[
+          {
+            model:Pedido,
+            as: 'pedido',
+            include:[
+              {
+                model: Persona,
+                as:'persona',
+                attributes:['genero',[sequelize.literal('YEAR(CURDATE()) - YEAR(fecha_nacimient)'), 'edad']]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    where: {
+      id_examen:id
+
+    },
+  });
+  const idAnalisisExamen = examen?.analisis?.id_analisis;
+
+
+    const determinacion= await Determinacion.findAll({
+     
+          attributes:['id_determinacion', 'valor', 'unidad_medida', 'nombre', 'id_analisis'],
+
+        
+      
+      where: {
+        id_analisis:idAnalisisExamen
+      },
+
+    });
+
+    const idDeterminaciones = await determinacion.map((registro) => registro.id_determinacion);
+
+    const valor_Ref= await ValorRef.findAll({
+attributes:['id_val_ref', 'id_determinacion', 'sexo', 'val_max', 'val_min', 'rango_edad'],
+where: {
+  id_determinacion: idDeterminaciones,
+  [Op.or]: [
+    { sexo: genero },
+    { sexo: null }
+  ], // Agregar condición solo si genero no es null
+}
+    });
+
+
+
+    callBack(examen, determinacion, valor_Ref)
+  
+} catch (error) {
+  console.error('Error:', error);
+  // Devolver JSON en caso de error
+
+}
+};
+
+const getPreInfo = async (id, genero,callBack)=>{
+  try{
+  const examen= await Examen.findOne({
+    include:[
+      {
+        model: Analisis,
+        as: 'analisis',
+        attributes:['id_analisis','descripcion'],
+       
+      },
+      {
+        model:Orden,
+         attributes:['id_orden'],
+        as:'orden',
+        include:[
+          {
+            model:Pedido,
+            as: 'pedido',
+            include:[
+              {
+                model: Persona,
+                as:'persona',
+                attributes:['id_persona','genero',[sequelize.literal('YEAR(CURDATE()) - YEAR(fecha_nacimient)'), 'edad']]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    where: {
+      id_examen:id
+
+    },
+  });
+  const idAnalisisExamen = examen?.analisis?.id_analisis;
+
+
+    const determinacion= await Determinacion.findAll({
+     
+          attributes:['id_determinacion', 'valor', 'unidad_medida', 'nombre', 'id_analisis'],
+
+        
+      
+      where: {
+        id_analisis:idAnalisisExamen
+      },
+
+    });
+
+    const idDeterminaciones = await determinacion.map((registro) => registro.id_determinacion);
+
+const registroDeValor = await registro_valores.findAll({
+  attributes:['id_reg', 'id_determinacion', 'id_examen', 'valor'],
+  where: {
+      id_determinacion: idDeterminaciones
+
+  },
+})
+
+    const valor_Ref= await ValorRef.findAll({
+attributes:['id_val_ref', 'id_determinacion', 'sexo', 'val_max', 'val_min', 'rango_edad'],
+
+where: {
+    id_determinacion: idDeterminaciones,
+    [Op.or]: [
+      { sexo: genero },
+      { sexo: null }
+    ], // Agregar condición solo si genero no es null
+},
+    });
+
+    callBack(examen, determinacion, valor_Ref, registroDeValor)
+  
+} catch (error) {
+  console.error('Error:', error);
+  // Devolver JSON en caso de error
+
+}
+};
+const cambiarEstadoDeEx = async (req, res) => {
+  const { id } = req.params;
+ 
+  try {
+    const examenEstado = await Examen.update(
+      { ex_estado: 1 }, // Define los campos que deseas actualizar y sus nuevos valores
+      { where: { id_examen: id } } // Define la condición para la actualización
+    );
+   
+    if (examenEstado) {
+   
+      res.status(200).json({ message: 'Estado del examen actualizado correctamente' });
+    } else {
+      res.status(404).json({ error: 'No se encontró ningún examen para actualizar' });
+    }
+  } catch (error) {
+    
+    res.status(500).json({ error: 'Error al actualizar el estado del examen' });
+  }
+};
+
+const cambiarEstadoDeExACero = async (req, res) => {
+  const { id } = req.params;
+ 
+  try {
+    const examenEstado = await Examen.update(
+      { ex_estado: 0 }, // Define los campos que deseas actualizar y sus nuevos valores
+      { where: { id_examen: id } } // Define la condición para la actualización
+    );
+   
+    if (examenEstado) {
+   
+      res.status(200).json({ message: 'Estado del examen actualizado correctamente' });
+    } else {
+      res.status(404).json({ error: 'No se encontró ningún examen para actualizar' });
+    }
+  } catch (error) {
+   
+    res.status(500).json({ error: 'Error al actualizar el estado del examen' });
+  }
+};
+
 
 
 module.exports = {
+  cambiarEstadoDeEx,
+  cambiarEstadoDeExACero,
   getForReg,
+  getPreInfo,
   cambiarDatosExamen,
   list,
   getById,
   crearExamen,
-
+  deleteById,
   ingresarExamen: async (req, res) => {
     try {
       const { nombre, descripcion, determinaciones, valoresReferencia, muestras } = req.body;
@@ -148,7 +364,7 @@ module.exports = {
 
       res.status(200).json({ message: 'Examen ingresado exitosamente.' });
     } catch (error) {
-      console.error('Error al ingresar el examen:', error);
+
       res.status(500).json({ error: 'Error interno del servidor.' });
     }
   },
@@ -180,7 +396,7 @@ module.exports = {
 
       res.status(200).json({ message: 'Examen actualizado exitosamente.' });
     } catch (error) {
-      console.error('Error al actualizar el examen:', error);
+    
       res.status(500).json({ error: 'Error interno del servidor.' });
     }
   },
@@ -199,9 +415,10 @@ module.exports = {
 
       res.status(200).json({ message: 'Estado del examen actualizado exitosamente.' });
     } catch (error) {
-      console.error('Error al actualizar el estado del examen:', error);
+
       res.status(500).json({ error: 'Error interno del servidor.' });
     }
   },
+  
 };
 

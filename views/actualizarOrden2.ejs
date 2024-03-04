@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Orden</title>
+    <%- include('imports/imports') %>
+</head>
+
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true,value:"Actualizar Orden",menu:true, tipoUser:rol})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r border-on">
+                <div class="c3 f-column">
+                    <div class="r">
+                        <div class="c4">
+
+                            <div class="r">
+                                <div class="c2 f-row">
+                                    <h2>Paciente: </h2>
+                                    <h2>
+                                        <%= orden.pedido.persona.nombre+" "+orden.pedido.persona.apellido %></h2> </div>
+                                <div class=" c2 f-row">
+                                            <h2>DNI:</h2>
+                                            <h2>
+                                                <%= orden.pedido.persona.dni %>
+                                            </h2>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="r">
+                        <div class="c4 f-column">
+                            <div class="r">
+
+                                <%if(orden.prioridad){%>
+                                    <label
+                                        style="color:white;font-size: 30px; background-color: brown; width: 300px; text-align: center;border: 3px solid black; border-radius: 10px;">Pedido
+                                        URGENTE</label>
+                                    <%}else{%>
+                                        <label style="font-size: 20px;">Pedido</label>
+                                        <%}%>
+                            </div>
+                            <label  style="font-size: 20px;">Diagnóstico: <div class="r">
+
+                                    <input type="text" id="diagnostico2" placeholder="Diagnóstico"
+                                        value="<%= orden.pedido.diagnostico %>">
+                                </div></label>
+
+                            <div class="r f-column">
+                                <input type="hidden" id="rol" value="<%=rol%>">
+                                <input type="hidden" class="form-control" id="id_orden2" value="<%= orden.id_orden%>">
+                                <input type="hidden" class="form-control" id="id_pedido2"
+                                    value="<%= orden.pedido.id_pedido %>">
+                                <input type="hidden" class="form-control" id="id_persona2"
+                                    value="<%= orden.pedido.persona.id_persona %>">
+                                <input type="hidden" class="form-control" id="dni_persona2"
+                                    value="<%= orden.pedido.persona.dni %>">
+
+                                <label  style="font-size: 20px;">Médico: <div class="r"><input type="text"
+                                            id="nombre_medico2" placeholder="Nombre Médico"
+                                            value="<%= orden.pedido.nombre_medico %>"></div></label>
+                                <label  style="font-size: 20px;">N° Matrícula:<div class="r"><input type="text"
+                                            id="nro_matricula2" placeholder="Nº Matrícula"
+                                            value="<%= orden.pedido.nro_matricula %>"></div></label>
+                                <label  style="font-size: 20px;">Análisis Previos: </label>
+
+                                <div class="r" id="listAnalisis1">
+                                    <% let contBtn=0;%>
+                                        <% muestra.forEach(analisisItem=> { %>
+
+                                            <span class="itemAnalisis2" style="text-align: center; height: 200px;">
+
+                                                <h3 class="crossCloseB">&#10006</h3>
+                                                <h4 style="color: white;">
+                                                    <%= analisisItem.guia_muestra.analisis.descripcion %>
+                                                </h4>
+                                                <input type="hidden" class="idExa"
+                                                    data-idexa="<%= analisisItem.orden.examen[contBtn].id_examen %>">
+                                                <input type="hidden" class="idMuestra"
+                                                    data-idmuestra="<%= analisisItem.id_muestra %>">
+
+                                                <h4 style="color: wheat;">Muestras:</h4>
+
+                                                <ul class="muestraAnalisis2" style="list-style: none;">
+                                                    <li class="f-row" id="<%= analisisItem.guia_muestra.id_guiaM %>">
+
+                                                        <h2 style="color: rgb(255, 255, 255);">
+                                                            <%= analisisItem.guia_muestra.g_descripcion %>
+                                                        </h2>
+                                                        <div class="" id="listAnalisis23"><!--BORRAR YA VENGO-->
+                                                            <% if (analisisItem.entregado) { %>
+                                                                <!--    <input type="hidden" value="<%= analisisItem.guia_muestra.id_guiaM %>">-->
+
+                                                                <input type="checkbox"
+                                                                    id="<%= analisisItem.id_muestra %>"
+                                                                    value="<%= analisisItem.entregado %>" checked>
+                                                                <input type="hidden"
+                                                                    value="<%= analisisItem.orden.examen[contBtn].id_examen %>">
+                                                                <input type="hidden"
+                                                                    value="<%= analisisItem.id_muestra %>">
+                                                                <% } else { %>
+
+                                                                    <input type="hidden"
+                                                                        value="<%= analisisItem.orden.examen[contBtn].id_examen %>">
+
+                                                                    <!--    <input type="hidden" value="<%= analisisItem.guia_muestra.id_guiaM %>">-->
+                                                                    <input type="checkbox"
+                                                                        id="<%= analisisItem.id_muestra %>"
+                                                                        value="<%= analisisItem.entregado %>">
+                                                                    <% } %>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </span>
+
+
+                                            <%contBtn++;%>
+                                                <% }); %>
+                                </div>
+
+                                
+
+
+                                <label for="analisisList" style="font-size: 20px;">Elegir Nuevos/Otros Analisis</label>
+                                <select name="analisisList" id="analisisList2">
+                                    <option value="">-- Seleccione analisis --</option>
+                                    <% listAnalisis.forEach(a=>{
+                                        %>
+                                        <option value="<%= a.id_analisis %>">
+                                            <%= a.descripcion %>
+                                        </option>
+                                        <% }) %>
+
+                                </select>
+                            </div>
+                            <div class="r" id="listAnalisis2">
+
+
+                            </div>
+                            <div class="r">
+                                <div class="c4">
+                                    <ul id="muestrasSolicitadas2">
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <label  style="font-size: 20px;">Fecha Inicio</label>
+                            <div class="r"><input id="fecha_creacion2" type="date"
+                                    value="<%= orden.fecha_creacion.toISOString().slice(0,10)  %>"> </div>
+                            <label style="font-size: 20px;">Fecha de Entrega</label>
+                            <div class="r"><input id="fecha_entrega2" type="date"
+                                    value="<%= orden.fecha_entrega.toISOString().slice(0,10)  %>"> </div>
+                            <label 
+                                style="text-align:center;font-size: 25px; background-color: brown; width: 200px; border: 3px solid black; border-radius: 10px;color:white;">Prioridad?
+                                Si
+
+                                <input type="checkbox" id="prioridad2" style="transform: scale(1.5);" <% if
+                                    (orden.prioridad) { %> checked <% } %> ></label>
+
+
+                            <!--
+                            <select name="estado_orden" id="estado_orden2">
+                                <% estados.forEach(e=>{
+                                    %> <option value="<%= e.id_estado %>"><%= e.nombre %></option> <%
+                                }) %>
+                            </select>-->
+                            <button id="btncrear2"> Actualizar</button>
+                            <button id="btnJugar2"> jugar</button>
+                            <button id="btnprueba" > prueba</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script type="module" src="/js/actualizarOrd2.js"></script>
+</body>
+
+</html>

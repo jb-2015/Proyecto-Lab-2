@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports')%>
+    <title></title>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden+' '+rol,titulo:true,menu:true,tipoUser: rol })%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <%let verificar= true;%>
+            <% for (let i = 0; i < examen.length; i++) { %>
+         
+                    <% const e = examen[i]; %>
+                    <% const m = muestras[i]; %>
+    
+                <%if(resOrd[i].ultimoCambio.id_estado === 3){%>
+                    <div class="r">
+                               <div class="c4 f-column border-on" style="background-color: rgb(240, 239, 239);">
+                                
+                                    <div class="r border-on">   
+                                      <%if(verificar){%>
+                                      
+                                       <div class="c2" style="width: auto;"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
+                                       <div class="c1" style="width: auto;"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
+                                       <div class="c1" style="width: auto;"> <h2>Fecha de Inicio: <%= orden.fecha_creacion.toISOString().slice(0,10)   %> </h2></div>
+                                       <div class="c4" style="padding-left: 50px;"> <h2>Edad: <%= orden.pedido.persona.dataValues.edad %></h2> </div>
+                                      
+                                       <div class="c4" style=" display: flex; justify-content: space-between;"> 
+                                            <h2 style="padding-left: 45px; width: 350px;"> Estado de Orden: <%= ultimoCambioOrden.estado.nombre %></h2>
+                                        
+                                       
+                                       <%if(orden.prioridad){%>
+                                           <label 
+                                               style="color:white;font-size: 30px; background-color: brown; width: 300px; height: 35px;;text-align: center;border: 3px solid black; border-radius: 10px;">Pedido
+                                               URGENTE</label>
+                                           <%}%>
+                                               <h2 style="padding-right: 45px;">Fecha de Entrega: <%= orden.fecha_entrega.toISOString().slice(0,10)   %> </h2>
+                                   </div>
+                                   <%verificar= false;%>
+                                     <%}%>
+                                
+                                     <input type="hidden" id="cancelarOrden" value="<%=orden.estado%>">
+                                       <input type="hidden" id="idOrden" value="<%=orden.id_orden%>">
+                                       <input type="hidden" id="id_examen" value="<%=e.id_examen%>">
+                                       <input type="hidden" id="rol" value="<%=rol%>">
+                                       <input type="hidden" id="id_persona" value="<%= orden.pedido.persona.id_persona%>">
+                                       <input type="hidden"  id="dni" value="<%=orden.pedido.persona.dni%>">
+                                       <input type="hidden"  id="nombre_<%=e.id_examen %>" value="<%=orden.pedido.persona.nombre%>">
+                                       <input type="hidden"  id="apellido_<%=e.id_examen %>" value="<%=orden.pedido.persona.apellido%>">
+                                    
+                                   
+                                     </div>
+                  <input type="hidden"  id="analisis_<%=e.id_examen %>" value="<%=e.analisis.descripcion%>">
+                                           <input type="hidden"  id="ite" value="<%=i%>"> 
+                                   <div class="r">
+                                      <div class="c4 f-column">
+                                       <label style="font-size: 20px;">Análisis:
+                                           <h2> <%= e.analisis.descripcion %> </h2></label>
+                                        
+                                          <!--     <h3> Estado de Orden: <%= resOrd[i].ultimoCambio.estado.nombre %></h3>-->
+                                       
+                                           <label style="font-size: 20px;">Muestras:</label>
+                                           <ul>
+                                               <% muestras.forEach(m=>{
+                                                
+                                                   %>
+                                                      <%if(e.analisis.id_analisis === m.guia_muestra.id_analisis){%>
+                                                       
+                                                   <li class="<% if(!m.entregado){ %> t-red <% }%>" style="font-size: 20px;"> <h3><%= m.guia_muestra.g_descripcion %></h3></li>
+                                                    <%}%>
+                                                   <%
+               
+                                                 
+                                               })
+                                                   
+                                            %>
+                                              <!-- <% muestras.forEach(m=>{
+                                                   %>
+                                                       <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.guia_muestra.g_descripcion %></li>
+                                                   <%
+                                               })%>      -->
+                                           </ul>
+                                           
+                                      </div>
+                                   </div>
+                                   <div class="r border-on ">
+                                       <div class="c1">
+                                           <h3><strong>Análisis: </strong> </h3>
+                                           <ul>
+                                               <% examen.forEach(ex=>{%>
+                                                   
+                                                   <li> <%= ex.analisis.descripcion %> </li>
+                                              
+                                               <% }) %>
+                                           </ul>
+                                       </div>
+                                      
+                                       <div class="c1 f-column">
+                                       <% if(orden.estado){%>          
+                                          
+                                               
+                                                   <input type="hidden"  id="exalength" value="<%=e.id_examen %>"> 
+                                                   <button class="btnEtiqueta" value="<%=e.id_examen %>">Etiqueta</button> 
+                                     
+                                                   
+                                               
+                                       <%}else{%>
+               
+               <h3 style="text-align: center; background-color: rgba(231, 88, 88, 0.74); border-radius: 10px; border: solid rgb(228, 115, 115);">La orden fue cancelada, para realizar acciones se requiere su activación.</h3>
+                                           <%}%>
+               </div>
+                                        
+                                           
+                                       <div class="c1">
+                                           
+                                             
+                                         
+                                               <h3>Medico: </h3>
+                                          
+                                           <ul> 
+                                              <li>Nombre:  
+                                              
+                                                  <%= orden.pedido.nombre_medico %>
+                                               </li>
+                                               <li>
+                                                 Matricula N°:   <%= orden.pedido.nro_matricula %>
+                                               </li>
+                                           </ul>
+                                           
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                           </div>
+            <div class="r">
+                <% if(rol == rol){
+                    %>
+                    <div class="c1"><button><a href="/registrar-valoresPreInfo/<%= e.id_examen %>/<%= orden.pedido.persona.genero %>">Registrar Valores</a></button></div>
+                    <div class="c1"><button id="btnParaValidar">Para validar</button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="c1"><button></button></div>
+                    <%
+                }
+                if(rol=='bioquimico'){
+                    %>
+                    <div class="c1"><button>Validar</button></div>
+                    <div class="c1"><button>Verificar</button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="c1"><button></button></div>
+                    <%
+                }
+                %>
+                
+            </div>
+            <% } %>
+            <% } %>
+        </div>
+    </main>
+    <footer></footer>
+    <script type="module" src="/js/cambioEstadoParavalidar.js"></script>
+</body>
+</html>

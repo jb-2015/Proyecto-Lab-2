@@ -28,8 +28,14 @@ const Usuario = sequelize.define('usuario', {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     defaultValue: null
-  }
-}, {
+  },
+  resetToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+},
+
+ {
   tableName: 'usuario',
   timestamps: false,
 });

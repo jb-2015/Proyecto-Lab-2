@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrativo</title>
+    <%- include('imports/imports.ejs') %>
+<style>
+/* Estilos CSS para achicar los input */
+input[type="text"],
+input[type="email"],
+select {
+  width: 200px; /* Define un ancho máximo para los input */
+  height: 26px;
+  font-size: 15px; 
+ /* Agrega un poco de relleno para mejorar la apariencia */
+   /* Agrega un pequeño margen para separar los input */
+}
+#tablaResultados {
+        /* Establece una altura máxima para la tabla */
+        max-height: 10px; /* Ajusta este valor según sea necesario */
+        /* Agrega un desplazamiento vertical si la tabla excede la altura máxima */
+        overflow-y: auto;
+    }
+/* Estilos CSS para los botones */
+.img-btn {
+  cursor: pointer; /* Cambia el cursor al pasar sobre la imagen */
+  padding: 10px; /* Añade un relleno para que sea más fácil de hacer clic */
+  /* Puedes agregar más estilos según tus preferencias */
+  width: 100px;
+  position: fixed; /* Hace que las imágenes se mantengan fijas en la ventana del navegador */
+  bottom: 20px; /* Ajusta la distancia desde el borde inferior */
+  right: 20px; /* Ajusta la distancia desde el borde derecho */
+  z-index: 999; /* Ajusta la superposición de las imágenes sobre otros elementos */
+  transition: transform 0.3s ease; 
+}
+#btnAlta { bottom: 100px; }
+#btnBaja { bottom: 200px; }
+#btnModificar { bottom: 300px; }
+#btnRegistrar { bottom: 410px; }
+#btnOrden { bottom: 0px; }
+.hide {
+            display: none;
+        }
+        .red {
+            color: red;
+        }
+</style>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true,value:rol,menu:true, tipoUser: rol})  %>
+     
+    </header>
+ 
+<main>
+  <input type="hidden" id="rol" value="<%=rol%>">
+
+    <div id="obtieneValorSelect">
+    <div class="tContainer"> 
+         
+      <div class="r">
+        <h2>Listado de Pacientes</h2>
+        <div class="r">
+     <form>
+                   <input  placeholder="Buscar..." id="searchTerm" type="text" onkeyup="doSearch() " />
+                </form>
+               </div>
+            
+
+        <div class="c4">
+          
+            <div class="r"> 
+                
+            <table id="tablaResultados" >
+                <thead >
+            <tr class="cabecera" >    
+                <td></td>
+              <td>Nombre</td>
+              <td>Apellido</td>
+              <td>DNI</td>
+              <td>Email</td>
+              <td>Telefono</td>
+              <td>Rol</td>
+              <td>Estado</td>
+
+            </tr>
+        </thead>
+        <tbody >
+            <% if (resultadosP && resultadosP.length > 0) { %>
+                <% var resultadosAltasArray = resultadosP; %>
+              <% resultadosP.forEach((resultado) => { %>
+                
+                <% if(resultado.usuario.estado) { %>
+                    
+                <tr>
+                    <input type="hidden" id="id_persona" value="<%= resultado.persona.id_persona %>">
+                    <tr>
+                   <td><input type="checkbox" name="seleccionadosB" class="checkbox-seleccion" data-dni="<%= resultado.persona.dni %>"></td>
+                   <td><input type="text" name="nombre" id="nombre_<%= resultado.usuario.dni %>" value="<%= resultado.persona.nombre %>"></td>
+                   <td><input type="text" name="apellido" id="apellido_<%= resultado.usuario.dni %>"  value="<%= resultado.persona.apellido %>"></td>
+                   <td><input type="text" name="dni" id="dni" value="<%= resultado.usuario.dni %>"  readonly ></td>
+                  
+                   <td><input type="email" name="email" id="email_<%= resultado.usuario.dni %>" value="<%= resultado.persona.email %>"></td>
+                   <td><input type="text" name="tel" id="tel_<%= resultado.usuario.dni %>" value="<%= resultado.persona.tel %>"></td>
+                            <td>
+               
+                       
+                                <select id="selectRol_<%= resultado.usuario.dni %>" style="width: 120px; font-size: 15px" disabled>
+                                  <option value="<%= resultado.usuario.rol %>" selected disabled><%= resultado.usuario.rol %></option>
+                                  <option value="Administrador">Administrador</option>
+                                  <option value="Tecnico">Técnico</option>
+                                  <option value="Bioquimico">Bioquímico</option>
+                           </select> 
+                            
+                          
+                        </td>
+                          
+                      <td>
+                        <select name="estado" style=" width: 80px; font-size: 15px; " disabled>
+                          <option value="true" <%= resultado.usuario.estado ? 'selected' : '' %> >Activo</option>
+                          <option value="false" <%= !resultado.usuario.estado ? 'selected' : '' %>>Inactivo</option>
+                        </select>
+                      </td>
+                   
+                </tr>
+                <% } %>
+              <% }); %>
+            <% } else { %>
+              <tr >
+                <td colspan="6">No hay personas con alta.</td>
+              </tr>
+            <% } %>
+            
+            <tr class='noSearch hide'>
+               
+                <td colspan="4"></td>
+            </tr>
+        
+            </tbody>
+          </table>
+
+        </div>
+        
+        </div>
+    </div>
+</div>
+    <div class="tContainer">
+        
+      <div class="r">
+            <h2>Personal en Estado Inactivo</h2>
+            <div class="r">
+                <form>
+                              <input  placeholder="Buscar..." id="searchTermB" type="text" onkeyup="doSearchB() " />
+                           </form>
+                          </div>
+      <div class="c4">
+        
+        <div class="r"> 
+          
+        <table id="tablaResultadosB" class="datos">
+            <thead > 
+        <tr class="cabecera">    
+            <td></td>
+          <td>Nombre</td>
+          <td>Apellido</td>
+          <td>DNI</td>
+    
+          <td>Email</td>
+          <td>Telefono</td>
+          <td>Rol</td>
+          <td>Estado</td>
+      
+        </tr>
+    </thead >
+        <tbody>
+        <% let cont= 0%>
+        <% if (resultadosP && resultadosP.length > 0) { %>
+            <% var resultadosAltasArray = resultadosP; %>
+          <% resultadosP.forEach((resultado) => { %>
+            
+            <% if(!resultado.usuario.estado) { %>
+                <% cont++; %>
+                <input type="hidden" id="id_persona" value="<%= resultado.persona.id_persona %>">
+                 <tr>
+                <td><input type="checkbox" name="seleccionadosB" class="checkbox-seleccion" data-dni="<%= resultado.persona.dni %>"></td>
+                <td><input type="text" name="nombre" id="nombre_<%= resultado.usuario.dni %>" value="<%= resultado.persona.nombre %>"></td>
+                <td><input type="text" name="apellido" id="apellido_<%= resultado.usuario.dni %>"  value="<%= resultado.persona.apellido %>"></td>
+                <td><input type="text" name="dni" id="dni" value="<%= resultado.usuario.dni %>" readonly style="width: 120px; font-size: 15px"></td>
+               
+                <td><input type="email" name="email" id="email_<%= resultado.usuario.dni %>" value="<%= resultado.persona.email %>"></td>
+                <td><input type="text" name="tel" id="tel_<%= resultado.usuario.dni %>" value="<%= resultado.persona.tel %>"></td>
+               
+               
+                    
+                   
+                <td>
+               
+                       
+                          <select id="selectRol_<%= resultado.usuario.dni %>" style="width: 120px; font-size: 15px" disabled>
+                            <option value="<%= resultado.usuario.rol %>" ><%= resultado.usuario.rol %></option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Tecnico">Técnico</option>
+                            <option value="Bioquimico">Bioquímico</option>
+                     </select> 
+                      
+                    
+                  </td>
+                  
+             
+                  
+              
+                  <td>
+                    <select name="estado" style=" width: 80px; font-size: 15px" disabled>
+                      <option value="true" <%= resultado.usuario.estado ? 'selected' : '' %>>Activo</option>
+                      <option value="false" <%= !resultado.usuario.estado ? 'selected' : '' %>>Inactivo</option>
+                    </select>
+                  </td>
+                
+            </tr>
+                <% } %>
+           
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="6">No hay personas con alta.</td>
+          </tr>
+        <% } %>
+      
+            
+        <tr class='noSearch hide'>
+               
+            <td colspan="4"></td>
+        </tr>
+    </tbody>
+      </table>
+     
+                    
+        
+   
+    </div>
+   
+    </div>
+
+    </div>
+</div>
+    <div class="r"> 
+        <!--  
+        <button class="c1" id="btnAlta" style="width: 60px; padding: 5px;">alta</button>
+
+        <button class="c1" id="btnBaja" style="width: 70px; padding: 5px;">baja</button>
+        <button class="c1" id="btnModificar" style="width: 140px; padding: 5px;">modificar</button>
+         <button class="c1"id="btnRegistrar" style="width: 130px; padding: 5px;">Registar</button>
+     -->              
+     <img src="/images/arribaAlta.png" id="btnAlta" alt="Botón" class="img-btn" style="width: 90px; height: 90px;" title="Alta">
+
+             <img src="/images/abajoBaja.png" id="btnBaja" alt="Botón" class="img-btn" style="width: 90px; height: 90px;" title="Baja">
+
+             <img src="/images/modificar.png" id="btnModificar" alt="Botón" class="img-btn" style="width: 90px; height: 90px;" title="Editar User">
+             <img src="/images/registrar.png" id="btnRegistrar" alt="Botón" class="img-btn" style="width: 90px; height: 90px;" title="Crear Cuenta">
+         <img src="/images/order.png" alt="Botón" class="img-btn" id="btnOrden" style="width: 90px; height: 90px;" title="Ver Orden">
+     
+       
+    </div>
+
+    </div>
+  </main>
+  <!-- Fin de la sección del cuerpo (body) de tu archivo EJS -->
+  
+    <footer></footer>
+    <script>
+         
+        // Obtén la tabla y el botón por su id
+    const tablaResultados = document.getElementById('tablaResultados');
+    const tablaResultadosB = document.getElementById('tablaResultadosB');
+    const tablaSelect= document.getElementById('obtieneValorSelect');
+    const botonGuardar = document.getElementById('btnguardar');
+    const btnAlta=document.getElementById('btnAlta');
+    const btnBaja=document.getElementById('btnBaja')
+    const btnModificar=document.getElementById('btnModificar')
+    const btnRegistrar=document.getElementById('btnRegistrar')
+    const btnOrden= document.getElementById('btnOrden')
+    const rol = document.getElementById('rol').value
+    let verificar= false;
+ 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    function doSearch() {
+            const tableReg = document.getElementById('tablaResultados');
+            const searchText = document.getElementById('searchTerm').value.toLowerCase();
+            let total = 0;
+
+            for (let i = 1; i < tableReg.rows.length; i++) {
+                if (tableReg.rows[i].classList.contains("noSearch")) {
+                    continue;
+                }
+
+                let found = false;
+                const cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+                
+                for (let j = 0; j < cellsOfRow.length && !found; j++) {
+                    const compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+                    if (searchText.length == 0 || compareWith.indexOf(searchText) > -1) {
+                        found = true;
+                        total++;
+                    }
+                }
+
+                if (found) {
+                    tableReg.rows[i].style.display = '';
+                } else {
+                    tableReg.rows[i].style.display = 'none';
+                }
+            }
+
+            const lastTR = tableReg.rows[tableReg.rows.length - 1];
+            const td = lastTR.querySelector("td");
+            lastTR.classList.remove("hide", "red");
+            
+            if (searchText == "") {
+                lastTR.classList.add("hide");
+            } else if (total) {
+                td.innerHTML = "Se ha encontrado " + total + " coincidencia" + ((total > 1) ? "s" : "");
+            } else {
+                lastTR.classList.add("red");
+                td.innerHTML = "<div style='text-align: center;'>No se han encontrado coincidencias</div>";
+            }
+        }
+        function doSearchB() {
+            const tableReg = document.getElementById('tablaResultadosB');
+            const searchText = document.getElementById('searchTermB').value.toLowerCase();
+            let total = 0;
+
+            for (let i = 1; i < tableReg.rows.length; i++) {
+                if (tableReg.rows[i].classList.contains("noSearch")) {
+                    continue;
+                }
+
+                let found = false;
+                const cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+                
+                for (let j = 0; j < cellsOfRow.length && !found; j++) {
+                    const compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+                    if (searchText.length == 0 || compareWith.indexOf(searchText) > -1) {
+                        found = true;
+                        total++;
+                    }
+                }
+
+                if (found) {
+                    tableReg.rows[i].style.display = '';
+                } else {
+                    tableReg.rows[i].style.display = 'none';
+                }
+            }
+
+            const lastTR = tableReg.rows[tableReg.rows.length - 1];
+            const td = lastTR.querySelector("td");
+            lastTR.classList.remove("hide", "red");
+            
+            if (searchText == "") {
+                lastTR.classList.add("hide");
+            } else if (total) {
+                td.innerHTML = "Se ha encontrado " + total + " coincidencia" + ((total > 1) ? "s" : "");
+            } else {
+                lastTR.classList.add("red");
+                td.innerHTML = "<div style='text-align: center;'>No se han encontrado coincidencias</div>";
+            }
+        }
+    
+ /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Escucha el evento de clic en la imagen de orden
+    btnOrden.addEventListener('click', (event) => {
+        
+            // Encuentra todas las casillas de verificación seleccionadas
+      const checkboxesSeleccionados = tablaSelect.querySelectorAll('.checkbox-seleccion:checked');
+    
+    // Itera sobre las casillas de verificación seleccionadas
+    checkboxesSeleccionados.forEach(async function (checkbox) {
+  
+    
+      const dniSeleccionado = checkbox.getAttribute('data-dni');
+     
+  try {
+      window.location.href = `/persona/panel-te/${dniSeleccionado}/${rol}`;
+   
+              
+            } catch (error) {
+                console.log(error);
+            }
+        
+    })
+    });
+
+    btnRegistrar.addEventListener('click', ()=>{
+      window.location.href='/usuario/formularioUsuario'
+    
+    })
+    
+    // Escucha el evento clic en el botón /modificarRol/user/
+    btnAlta.addEventListener('click', ()=> {
+      // Encuentra todas las casillas de verificación seleccionadas
+      const checkboxesSeleccionados = tablaResultadosB.querySelectorAll('.checkbox-seleccion:checked');
+    
+      // Array para almacenar los datos seleccionados
+      const datosSeleccionados = [];
+    
+      // Itera sobre las casillas de verificación seleccionadas
+      checkboxesSeleccionados.forEach(function (checkbox) {
+        const dniSeleccionado = checkbox.getAttribute('data-dni');
+        
+    console.log("dni: "+dniSeleccionado);
+    
+    try {
+        const resultado= fetch(`/usuario/cambioAlta/user/${dniSeleccionado}`)
+        verificar= true;
+       
+    } catch (error) {
+        console.log(error)
+    }
+       
+    });
+    if (verificar) {
+        alert('Estado Modificado')
+        window.location.href = `/usuario/listaPaciente/userPa`;
+       }
+    });
+    
+    btnBaja.addEventListener('click', ()=> {
+      // Encuentra todas las casillas de verificación seleccionadas
+      const checkboxesSeleccionados = tablaResultados.querySelectorAll('.checkbox-seleccion:checked');
+    
+      // Array para almacenar los datos seleccionados
+      const datosSeleccionados = [];
+    
+      // Itera sobre las casillas de verificación seleccionadas
+      checkboxesSeleccionados.forEach(function (checkbox) {
+        const dniSeleccionado = checkbox.getAttribute('data-dni');
+    console.log("dni: "+dniSeleccionado);
+    
+    try {
+        const resultado= fetch(`/usuario/cambioBaja/user/${dniSeleccionado}`)
+        verificar= true;
+       
+    } catch (error) {
+        console.log(error)
+    }
+       
+    });
+    if (verificar) {
+        alert('Estado Modificado')
+        window.location.href = `/usuario/listaPaciente/userPa`;
+       }
+    });
+    
+    
+    // Obtener el elemento select por su nombre
+    
+    
+    btnModificar.addEventListener('click', async ()=> {
+       
+       
+      // Encuentra todas las casillas de verificación seleccionadas
+      const checkboxesSeleccionados = tablaSelect.querySelectorAll('.checkbox-seleccion:checked');
+    
+     
+      // Array para almacenar los datos seleccionados
+      const datosSeleccionados = [];
+    
+      // Itera sobre las casillas de verificación seleccionadas
+      checkboxesSeleccionados.forEach(async function (checkbox) {
+    
+      
+        const dniSeleccionado = checkbox.getAttribute('data-dni');
+        const selectRol = document.getElementById(`selectRol_${dniSeleccionado}`);
+        const nombreInput = document.getElementById(`nombre_${dniSeleccionado}`).value;
+        const apellidoInput = document.getElementById(`apellido_${dniSeleccionado}`).value;
+        //const fechaNacimientInput = document.getElementById(`fecha_nacimient_${dniSeleccionado}`).value;
+      //  const direccionInput = document.getElementById('direccion').value;
+        const telInput = document.getElementById(`tel_${dniSeleccionado}`).value;
+        const emailInput = document.getElementById(`email_${dniSeleccionado}`).value;
+    
+        const valorSeleccionado = selectRol.value;
+     
+        try {
+    verificar= true;
+    const resultado=  await fetch(`/usuario/modificarRol/user/${dniSeleccionado}/${valorSeleccionado}`)
+   
+    const response = await fetch(`/persona/perso/${dniSeleccionado}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nombre: nombreInput,
+                apellido: apellidoInput,
+                
+                //fecha_nacimient: fechaNacimientInput,
+                //genero: generoInput,
+              //  direccion: direccionInput,
+                tel: telInput,
+                email: emailInput
+            })
+        });
+
+   
+   
+} catch (error) {
+    console.log(error)
+}
+        if (verificar) {
+        alert('Estado Modificado')
+        window.location.href = `/usuario/listaPaciente/userPa/${rol}`;
+       }
+    });
+})
+       </script>
+</body>
+</html>

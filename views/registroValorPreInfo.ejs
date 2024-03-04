@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Valores</title>
+    <%- include('imports/imports')%>
+</head>
+<body>
+    <input type="hiden" value="<%= examen.id_examen%>" id="id_examen">
+    <header>
+        <%- include('parcial/nav',{logo:true, titulo:true,value:'Registrar Valores',menu:true,tipoUser:'Tecnico'}) %>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4">
+                    
+                    <input type="hidden" id="idOrden" value="<%=examen.orden.id_orden%>">
+                    <table>
+                        <tr class="cabecera">
+                            <td>Determinacion</td>
+                            <td>resultado</td>
+                            <td>unidad</td>
+                            <td>Val. Max.</td>
+                            <td>Val. Min.</td>
+                        </tr>
+                        <% determinacion.forEach(registro => { %>
+                            %>
+                              <tr>
+                                
+                                <td><%= registro.nombre %></td>
+                                <% const rg = registroDeValor.find(item => item.id_determinacion === registro.id_determinacion); %>
+    <td>
+        <input type="hidden" id="id_deter" value="<%= registro.id_determinacion %>">
+      <input type="text" id="<%= rg ? rg.id_determinacion : '' %>" class="inputDet" value="<%= rg ? rg.valor : '' %>">
+    </td>
+                                <td><%= registro.unidad_medida %></td>
+                               
+
+                                <td>
+
+                                   <%
+    valor_Ref.forEach(vr => {
+        
+        let rango = "";
+        if (persona.edad < 17 && persona.edad < 51) {
+            rango = "18-50";
+             
+        } else {
+            rango = "51-80";
+        }
+
+        if (vr.id_determinacion === registro.id_determinacion) {
+%>
+
+            <%= vr.val_max %>
+           
+<%
+        }
+        
+    });
+%>
+                                </td>
+                                <td>
+
+                                    <%
+     valor_Ref.forEach(vr => {
+         
+         let rango = "";
+         if (persona.edad < 17 && persona.edad < 51) {
+             rango = "18-50";
+              
+         } else {
+             rango = "51-80";
+         }
+ 
+         if (vr.id_determinacion === registro.id_determinacion) {
+ %>
+ 
+             <%= vr.val_min %>
+            
+ <%
+         }
+         
+     });
+ %>
+                                 </td>
+                              </tr>
+                            <%
+                        }) %>
+                    </table>
+                    
+                </div>
+            </div>
+            <div class="r"><div class="c3"><button id="guardarValor">Guardar</button></div></div>
+        </div>
+    </main>
+    <footer></footer>
+    <script type="module" src="/js/updateRegValorPreInfo.js"></script>
+</body>
+</html>

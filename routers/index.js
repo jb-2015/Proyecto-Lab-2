@@ -11,7 +11,11 @@ const personaController= require('../controllers/personaController')
 const estadoController = require('../controllers/estadoController')
 const ordenController = require('../controllers/ordenController')
 const examenController= require('../controllers/examenController')
+const usuarioController = require('../controllers/usuarioController')
 const { body, validationResult } = require('express-validator');
+const authMiddleware = require('../middleware/authMiddleware');
+const userValidationMiddleware = require('../middleware/validateUser');
+const muestraController = require('../controllers/muestraController');
 
 //IMPORTAR EL MODELO PARA EL REGISTRO DE VALORES
   const RegistroValores= require('../models/registro_valores')
@@ -32,68 +36,77 @@ router.use(session({
 	secret: 'secret',
 	resave: false,
     saveUninitialized: true,
- //  cookie: { secure: false }
+    cookie: {
+      secure: false, // Configurar a true si estás usando HTTPS
+      httpOnly: true,
+      // maxAge: null,  // Comentar o eliminar esta línea para una cookie de sesión de navegador
+    }
 }))
-function requireAuth(req, res, next) {
-
-  if (req.session && req.session.user) {
-    return next(); // Si hay una sesión activa, permite el acceso
-  }
-  res.redirect('/portal-personal'); // Si no hay sesión activa, redirige al inicio de sesión
-}
 
 
 
 
-function checkIncognito(req, res, next) {
-    const userAgent = req.headers['user-agent'];
-    const isIncognito = /\/Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-  
-    if (isIncognito) {
-        req.session.destroy(); // Destruye la sesión
-      // Redirige al inicio de sesión
-     
-      }
-        next(); // Si no es incógnito, continúa con la siguiente ruta o middleware
-      
-  }
+
   
   // Utiliza el middleware checkIncognito antes de tus rutas
-  router.use(checkIncognito);
+  router.use(authMiddleware.checkIncognito);
+//router.get('/cerrar-sesion', cerrarSesion);
+router.get('/cerrar-sesion', authMiddleware.requireAuth, authMiddleware.cerrarSesion);
+// Utiliza el middleware de validación de usuario por DNI antes de las rutas que requieren autenticación
+//router.use(userValidationMiddleware.validateUsuarioPorDNI);
 
-  function cerrarSesion(req, res) {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Error al cerrar sesión:", err);
-            res.status(500).send("Error al cerrar sesión");
-        } else {
-            res.redirect('/'); // Puedes redirigir a donde prefieras
-        }
-    });
-}
-router.get('/cerrar-sesion', cerrarSesion);
-
-
-
+// Utiliza el middleware de manejo de errores de validación
+//router.use(userValidationMiddleware.handleErrorValidations);
 /**ACA VA A ENTRAR CUANDO SE HAGA UN INICIO DE SESION */
-  router.get('/page-administrativo', requireAuth,(req, res) => {
-    res.render("page-administrativo",{rol:'administrativo'})	
+
+router.get("/page-Gerente",authMiddleware.requireAuth, async(req,res)=>{
+  try {
+    const resultadosAltas = await usuarioController.tablaEmpleado();
+    //const resultadoForm= await usuarioController.formuEmpleado()
+    const rolesDisponibles = ['Administrador', 'Tecnico', 'Bioquimico', 'Gerente'];
+    
+    res.render("page-Gerente", { rol: 'Gerente', resultadosAltas,rolesDisponibles });
+    //res.render("modificarPersona",{rol: 'gerente', resultadosAltas})
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
+  router.get('/page-Administrador', authMiddleware.requireAuth,(req, res) => {
+    res.render("page-administrativo",{rol:'Administrador'})	
+    
+
   });
-  router.get("/page-paciente",(req,res)=>{
-    res.render("page-Paciente",{rol:'paciente'})	
+  
+  router.get("/page-Paciente",authMiddleware.requireAuth,(req,res)=>{
+    res.render("page-Paciente",{rol:'Paciente'})	
   })
 
 
-  router.get("/page-tecnico",(req,res)=>{
-    ordenController.buscarPorEstado(2,ordenes=>{
-        res.render("page-Tecnico",{rol:'tecnico', ordenes})
-    })
-    	
+  router.get("/page-Tecnico",authMiddleware.requireAuth, async(req,res)=>{
+    try {
+      const ordenes = await new Promise((resolve, reject) => {
+          ordenController.buscarPorEstado(2, (ordenes) => {
+              resolve(ordenes);
+          });
+      });
+
+      const ordenes2 = await new Promise((resolve, reject) => {
+          ordenController.buscarPreinfo((ordenes2) => {
+              resolve(ordenes2);
+          });
+      });
+
+      res.render("page-Tecnico", { rol: 'Tecnico', ordenes, ordenes2 });
+   //   res.json({ordenes, ordenes2})
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
   })
 
-  router.get("/page-bioquimico",(req,res)=>{
+  router.get("/page-Bioquimico",authMiddleware.requireAuth,(req,res)=>{
     ordenController.buscarParaValidar(ordenes=>{
-    res.render("page-Bioquimico",{rol:'bioquimico',ordenes})	
+    res.render("page-Bioquimico",{rol:'Bioquimico',ordenes})	
   })
   })
   //--------------------------------------------------------------------
@@ -105,17 +118,18 @@ router.get('/cerrar-sesion', cerrarSesion);
     
     res.render("accesoPaciente")
   })
-  router.get("/portal-personal",(req,res)=>{
-    
-    res.render("accesoPersonal")
-  })
+  router.get("/portal-personal", (req, res) => {
+  
+    res.render("accesoPersonal");
+});
 
 
   
   
   
-  router.get("/page-create-orden/:id_persona",requireAuth, async (req,res)=>{
+  router.get("/page-create-orden/:id_persona/:rol",authMiddleware.requireAuth, async (req,res)=>{
     const {id_persona}=req.params
+    const {rol}=req.params
     let person
 
     await  personaController.buscarPorId(id_persona,p=>{
@@ -126,12 +140,28 @@ router.get('/cerrar-sesion', cerrarSesion);
       estados=est
     })
     await analisisController.obtenerAnalisis(listAnalisis =>{
-      res.render('crearOrden',{id_persona,listAnalisis,person,estados})
+      res.render('crearOrden',{id_persona,listAnalisis,person,estados,rol})
     })
     
   })
+  router.get("/page_orden/create/:id/:rol",authMiddleware.requireAuth, async (req,res)=>{
+    const {id_persona}=req.params
+    const { id } = req.params;
+    const { rol } = req.params;
+const muestra= await muestraController.obtenerMuestra(id)
 
-  router.post("/guardar-valores",(req,res)=>{
+ const orden= await ordenController.actualizarOrden(id,rol)
+
+    let estados
+    await estadoController.list(est=>{
+      estados=est
+    })
+    await analisisController.obtenerAnalisis(listAnalisis =>{
+      res.render('actualizarOrden2',{id_persona,listAnalisis,orden,muestra,estados,rol})
+    })
+    
+  })
+  router.post("/guardar-valores",authMiddleware.requireAuth,(req,res)=>{
       const {id_determinacion,id_examen,valor} = req.body
 
       const nuevoRegistro= {
@@ -152,16 +182,81 @@ router.get('/cerrar-sesion', cerrarSesion);
  
 ////////////////////REGISTRAR VALORES////////////////////////////////////////////////
 
-router.get('/registrar-valores/:id',async (req,res)=>{
+router.get('/registrar-valores/:id/:genero/:rol',authMiddleware.requireAuth,async (req,res)=>{
   const {id} = req.params
-  await examenController.getForReg(id,(examen)=>{
-      const persona = examen.orden.pedido.persona.get({plain:true})
-      console.log("PERSONA: " +persona)
-      res.render('registrar_valores',{examen,persona})
-  })
+  const {genero} = req.params
+  const {rol} = req.params
+  try {
+    await examenController.getForReg(id, genero, (examen, determinacion, valor_Ref) => {
+      if (examen && examen.orden && examen.orden.pedido && examen.orden.pedido.persona) {
+        const persona = examen.orden.pedido.persona.get({ plain: true });
+        console.log("PERSONA: " + persona.genero);
 
+     res.render('registrar_valores',{examen, determinacion, valor_Ref, persona,rol})
+        /*
+     res.json({
+          ok: true,
+          persona: persona,
+          examen: examen,
+          determinacion: determinacion,
+          valor_Ref: valor_Ref
+        });
+      } else {
+        res.json({
+          ok: false,
+          error: 'No se encontraron datos relacionados con el examen proporcionado.'
+        });
+        */
+      }
+      
+    });
+    
+  } catch (error) {
+    console.error('Error:', error);
+    res.json({
+      ok: false,
+      error: 'Error en el servidor al procesar la solicitud.'
+    });
+  }
+});
 
-})
+router.get('/registrar-valoresPreInfo/:id/:genero',authMiddleware.requireAuth,async (req,res)=>{
+  const {id} = req.params
+  const {genero} = req.params
+  try {
+    await examenController.getPreInfo(id, genero, (examen, determinacion, valor_Ref, registroDeValor) => {
+      if (examen && examen.orden && examen.orden.pedido && examen.orden.pedido.persona) {
+        const persona = examen.orden.pedido.persona.get({ plain: true });
+        console.log("PERSONA: " + persona.id_persona);
+
+     res.render('registroValorPreInfo',{examen, determinacion, valor_Ref, persona, registroDeValor})
+        /*
+     res.json({
+          ok: true,
+          persona: persona,
+          examen: examen,
+          determinacion: determinacion,
+          valor_Ref: valor_Ref,
+          registroDeValor: registroDeValor
+        });
+      } else {
+        res.json({
+          ok: false,
+          error: 'No se encontraron datos relacionados con el examen proporcionado.'
+        });
+         */
+      }
+      
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.json({
+      ok: false,
+      error: 'Error en el servidor al procesar la solicitud.'
+    });
+  }
+});
+
 
 
 
@@ -171,9 +266,9 @@ router.get('/registrar-valores/:id',async (req,res)=>{
 
   ///Eduardo/////////////////////////////////////////////////////////////////
   const consultaController = require('../db/consulta');
-  router.get('/pacienTec', consultaController.realizarConsulta);
-  router.get('/orden/:id', consultaController.obtenerResultados);
-  router.get('/nueva-orden', (req, res) => {
+  router.get('/pacienTec',authMiddleware.requireAuth, consultaController.realizarConsulta);
+  router.get('/orden/:id', authMiddleware.requireAuth,consultaController.obtenerResultados);
+  router.get('/nueva-orden',authMiddleware.requireAuth, (req, res) => {
     
     res.render('crearOrden.ejs');
   });
@@ -189,6 +284,8 @@ const pedidoRouter = require('./pedido');
 const personaRouter = require('./persona');
 const usuarioRouter = require('./usuario');
 const valorRefRouter = require('./valor_ref');
+const RegistroValorRouter= require('./registrovalor');
+const cambioClaveRouter= require('./cambioClave');
 const { resetWatchers } = require('nodemon/lib/monitor/watch');
 // Usar las rutas individuales
 router.use('/analisis', analisisRouter);
@@ -202,4 +299,7 @@ router.use('/pedido', pedidoRouter);
 router.use('/persona', personaRouter);
 router.use('/usuario', usuarioRouter);
 router.use('/valor_ref', valorRefRouter);
+router.use('/registrovalor', RegistroValorRouter);
+router.use('/cambioClave', cambioClaveRouter);
+
 module.exports = router;

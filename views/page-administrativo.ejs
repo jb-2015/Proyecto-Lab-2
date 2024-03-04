@@ -20,9 +20,13 @@
             </div>
             <div class="r">
                 <div class="c2 f-column">
-                    <input type="number" placeholder="Ingrese DNI" id="dni-paciente-search">
+                    <input type="hidden" id="rol" value="<%=rol%>">
+                    <input type="number" placeholder="Buscar por Documento" id="dni-paciente-search">
+                 
+                    <input type="email" placeholder="Buscar por Email" id="email-paciente-search">
                     <button type="click" id="buscarPaciente">Buscar</button>
-                    <a href="/persona/nueva" id="crearPersona" style="display: none;">Crear Persona</a>
+                    <button type="click" id="listaPaciente">Lista de pacientes</button>
+                    <a href="/persona/nueva/<%=rol%>" id="crearPersona" style="display: none;">Crear Persona</a>
                 </div>
             </div>
         </div>

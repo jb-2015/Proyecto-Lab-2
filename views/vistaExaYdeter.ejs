@@ -11,12 +11,27 @@
         .resaltado {
   background-color: rgb(255, 72, 0); /* Puedes usar cualquier color o estilo que prefieras */
 }
-
+table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    .resaltado {
+        background-color: rgb(255, 72, 0);
+        /* Puedes usar cualquier color o estilo que prefieras */
+    }
     </style>
 </head>
 <body>
     <header>
-        <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de Bioquimico", menu:true, tipoUser: 'Bioquimico'}) %>
+        <%- include('parcial/nav',{logo:true,titulo:true, value: rol, menu:true, tipoUser: rol}) %>
     </header>
     <main>
         <div class="tContainer">
@@ -30,8 +45,8 @@
                         <% let examenMostrado = false; %>
 
                         <% resultados.forEach(resultado => { %>
-                          <% if (resultado.determinacion && !examenMostrado) { %>
-                            <h2><%= resultado.determinacion.examenD.nombre_examen %></h2>
+                          <% if (resultado.dataValues.descripcion && !examenMostrado) { %>
+                            <h2><%= resultado.dataValues.descripcion %></h2>
                             <% examenMostrado = true; %>
                           <% } %>
                           <% }); %>
@@ -45,29 +60,30 @@
                               <th>Unidad de Medida</th>
                               <th>Valor Máximo</th>
                               <th>Valor Mínimo</th>
-                              <th>Sexo</th>
                               <th>Rango de Edad</th>
-                              <th>nombre</th>
+             
                             </tr>
                       
                             <% resultados.forEach(resultado => { %>
-                              <% if (resultado.determinacion) { %>
+                             
                                 <tr>
-                                    
-                                  <td><%= resultado.determinacion.nombre %></td>
-                                  <td <% if (resultado.determinacion.valor > resultado.determinacion.dataValues.val_max) { %>class="resaltado"<% } %>><%= resultado.determinacion.valor %></td>
-                                  <td><%= resultado.determinacion.unidad_medida %></td>
-                                  <td><%= resultado.determinacion.dataValues.val_max %></td>
-                                  <td><%= resultado.determinacion.dataValues.val_min %></td>
-                                  <td><%= resultado.determinacion.dataValues.sexo %></td>
-                                  <td><%= resultado.determinacion.dataValues.rango_edad %></td>
+                                  <td><%= resultado.dataValues.Determinacion %></td>
+                                  <td <% if (resultado.dataValues.Valor > resultado.val_max) { %>class="resaltado"<% } %>><%= resultado.dataValues.Valor %></td>
+                                 <td><%= resultado.determinacion.unidad_medida %></td>
+                                  <td><%= resultado.val_max %></td>
+                                  <td><%= resultado.val_min %></td>
+                                  <td><%= resultado.rango_edad %></td>
                                   
-                                </tr>
-                              <% } %>
+                                  <input type="hidden" id="id_orden" value="<%= resultado.dataValues.idOrden %>">
+                                  <input type="hidden" id="id_examen" value="<%= resultado.dataValues.id_examen %>">
+                              </tr>
+                            
                             <% }); %>
                           </table>
                         <% } else { %>
-                          <p>No se encontraron resultados.</p>
+                          
+                          <p>No se encontraron resultados. </p>
+                        
                         <% } %>
                       
                        </div>
@@ -84,13 +100,14 @@
                 </div>
             </div>
             <div class="r">
-                <div class="c1"><button>Verificar</button></div>
-                <div class="c1"><button>Informar</button></div>
-                <div class="c1"><button>Validar</button></div>
-                <div class="c1"><button></button></div>
+              
+              <div class="c1"><button id="verificar">Verificar</button></div>
+                <div class="c1"><button id="btnInformar">Informar</button></div>
+               
             </div>
         </div>
     </main>
     <footer></footer>
+    <script type="module" src="/js/cambioEstadobtn.js"></script>
 </body>
 </html>

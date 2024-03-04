@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports')%>
+    <title></title>
+    <style>
+        .resaltado {
+  background-color: rgb(255, 72, 0); /* Puedes usar cualquier color o estilo que prefieras */
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de Tecnico", menu:true, tipoUser: 'Tecnico'}) %>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4 f-column border-on">
+                    <div class="r border-on">
+                        <h1>Resultados de Exámen </h1>
+                    </div>
+                    <div class="r">
+                       <div class="c4 f-column">
+                        <% let examenMostrado = false; %>
+
+                        <% let contador = 0; %>
+                        <% resultados.forEach(resultado => { %>
+                          <% if (resultado.dataValues.descripcion && !examenMostrado) { %>
+                            <h2><%= resultado.dataValues.descripcion %></h2>
+                            <% examenMostrado = true; %>
+                          <% } %>
+                          <% }); %>
+  
+                        <% if (resultados.length > 0) { %>
+                          <table>
+                            <tr>
+                              <th> </th>
+                              <th> </th>
+                              <th>Determinacion</th>
+                              <th>Resultado</th>
+                              <th>Unidad de Medida</th>
+                              <th>Valor Máximo</th>
+                              <th>Valor Mínimo</th>
+                              <th>Rango de Edad</th>
+              
+                            </tr>
+                            <% resultados.forEach(resultado => { %>
+                                <%contador++; %>
+                               
+                                <tr>
+                                  
+                                  
+                                    <td><input type="hidden" id="idExamen" value="<%= resultado.dataValues.id_examen%>"></td>
+                                    <td><input type="hidden" class="idDeterminacion" value="<%= resultado.dataValues.id %>"></td>
+                                  <td><%= resultado.dataValues.Determinacion %></td>
+                                  <td><input type="text" class="valores" value="<%= resultado.dataValues.valor %>"></td>
+
+                                 <td><%= resultado.dataValues.unidad_medida %></td>
+                                  <td><%= resultado.val_max %></td>
+                                  <td><%= resultado.val_min %></td>
+                                  <td><%= resultado.rango_edad %></td>
+                                  <input type="hidden" id="id_orden" value="<%= resultado.dataValues.idOrden %>">
+                              </tr>
+                            
+                              
+                            <% }); %>
+                            <input type="hidden" id="contador" value= "<%= contador %>">
+                          </table>
+                        <% } else { %>
+                          <p>No se encontraron resultados.</p>
+                        <% } %>
+                      
+                       </div>
+                    </div>
+                    <div class="r border-on ">
+                        <div class="c2">
+                           
+                        </div>
+                        <div class="c2">
+                      
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="r">
+              
+              <div class="c1"><button id="verificar">Verificar</button></div>
+                <div class="c1"><button>Informar</button></div>
+                <div class="c1"><button id="guardarValor">Validar</button></div>
+                <div class="c1"><button></button></div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script type="module" src="/js/cargarValor.js"></script>
+</body>
+</html>

@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const analisisController = require('../controllers/analisisController');
-
-router.get('/', analisisController.obtenerAnalisis);
-router.get('/buscar-id/:id',(req,res)=>{
+const authMiddleware = require('../middleware/authMiddleware');
+router.get('/', authMiddleware.requireAuth, analisisController.obtenerAnalisis);
+router.get('/buscar-id/:id',authMiddleware.requireAuth,(req,res)=>{
     const {id} =req.params;
 
     analisisController.buscarPorId(id,(data)=>{

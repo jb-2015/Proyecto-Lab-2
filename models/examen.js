@@ -34,8 +34,13 @@ const Examen = sequelize.define('examen', {
   id_analisis:{
       type: DataTypes.INTEGER,
       allowNull:false
-    }
-  
+    },
+    ex_estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: null
+    },
+
 }, {
   tableName: 'examen',
   timestamps: false,

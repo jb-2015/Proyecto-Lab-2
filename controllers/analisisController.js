@@ -10,7 +10,7 @@ const obtenerAnalisis = async (callback) => {
     const analisis = await Analisis.findAll();
     callback(analisis)
   } catch (error) {
-    console.error('Error:', error);
+    
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -19,7 +19,7 @@ const buscarPorId= async (id,callback)=>{
   try{
     Analisis.findByPk(id)
     .then(async (analisis)=>{
-      console.log('ANALISIS BUSCADO POR ID: '+ analisis)
+   
       await guiaMuestraController.getByAnalisis(id,(muestras)=>{
         callback({OK:true,analisis: analisis,muestras:muestras})
       })

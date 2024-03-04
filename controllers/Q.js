@@ -14,21 +14,20 @@ const ValorRef = require('../models/valor_ref');
 const guia_muestra= require('../models/guia_muestra')
 const Registro_valores = require('../models/registro_valores')
 
-
-const analisisPorOrden = async (id_o,callback)=>{
+const analisisPorOrden = async (id_o, callback) => {
     Analisis.findAll({
         include: [
             {
                 model: Orden,
                 as: orden,
-                where:{
+                where: {
                     id_orden: id_o
                 }
             }
         ]
-    }).then(analisis=>{
-        callback({data:analisis, OK: true})
-    }).catch(error){
-        callback({data: error, OK:false})
-    }
-}
+    }).then(analisis => {
+        callback({ data: analisis, OK: true });
+    }).catch(error => { // Utiliza una función de flecha aquí
+        callback({ data: error, OK: false });
+    });
+};

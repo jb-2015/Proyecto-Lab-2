@@ -12,22 +12,40 @@
     <main>
         <div class="tContainer">
             <div class="r">
-                <div class="c4">
-                    <h1>Ordenes en estado Para Validar</h1>
+                <div class="c4 r">
+                    <h1 style="font-family: Arial, sans-serif; font-size: 35px; color: #0e0d0d; font-weight: normal;">Ordenes en estado Para Validar</h1>
                 </div>
             </div>
             <div class="r">
-               <div class="c4 f-column">
+               <div class="c4 f-column">  
+                <input type="hidden" id="rol" value="<%=rol%>">
+                <%
+                // Ordenar las órdenes por prioridad (las órdenes con prioridad primero)
+                ordenes.sort((a, b) => {
+                  if (a.dataValues.prioridad && !b.dataValues.prioridad) {
+                    return -1; // a tiene prioridad, debería venir antes
+                  } else if (!a.dataValues.prioridad && b.dataValues.prioridad) {
+                    return 1; // b tiene prioridad, debería venir antes
+                  } else {
+                    return 0; // ninguna tiene prioridad o ambas tienen, mantener el orden actual
+                  }
+                });
+                %>
                 <%
                 ordenes.forEach(o=>{
                     %>
                     <div class="r">
-                        <div class="ordenItem f-row">
-                            
+                        <%if(o.dataValues.prioridad){%>
+                            <div class="ordenItem f-row"style="border: red solid;">
+                                  <%}else {%>  
+                                    <div class="ordenItem f-row">
+                                    <%}%>
                             <span class="c1 f-column bg-lightBlue border-on2">
+                                <div class="r "><%= o.id_orden %></div>
                                 <div class="r "><%= o.dataValues.dni_persona %></div>
-                              
+                                <div class="r "><%= o.dataValues.genero_persona %></div>
                                 <div class="r"><h3><%= o.dataValues.nombre_persona +" "+ o.dataValues.apellido_persona %></h3></div>
+                          
                             </span>
                             <span class="c1 f-column">
                                 <div class="r"><%= o.dataValues.descripcion%></div>
@@ -35,7 +53,7 @@
                             </span>
                             <span class="c1"><%=  o.fecha_creacion  %></span>
                             <span class="c1 f-row">
-                                <a href="/determinacion/paraValidar/<%= o.id_orden%>/<%= o.dataValues.genero_persona%>"><img src="/images/ver.png" alt=""></a>
+                                <a href="/determinacion/paraValidar/<%= o.dataValues.id_examen %>/<%= o.dataValues.genero_persona %>/<%= o.id_orden %>/<%=rol%>"><img src="/images/ver.png" alt=""></a>
                                 <a href=""><img src="/images/print.png" alt=""></a>
                                 <a href=""><img src="/images/pdf.png" alt=""></a>
                             </span>

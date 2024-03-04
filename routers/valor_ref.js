@@ -3,8 +3,8 @@ const router = express.Router();
 
 
 const valorRefController = require('../controllers/valorRefController');
-
-router.get('/', valorRefController.list);
-router.get('/:id', valorRefController.getById);
+const authMiddleware = require('../middleware/authMiddleware');
+router.get('/',authMiddleware.requireAuth, valorRefController.list);
+router.get('/:id', authMiddleware.requireAuth, valorRefController.getById);
 
 module.exports = router;

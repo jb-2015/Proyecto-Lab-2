@@ -1,11 +1,24 @@
+document.addEventListener("DOMContentLoaded", function() {
+
 const btnGuardar= document.getElementById('guardarResult')
+const rol= document.getElementById('rol').value
 
-
-btnGuardar.addEventListener('click', ()=>{
+btnGuardar.addEventListener('click', async ()=>{
+   alert("halsalas") 
     let inputs = document.querySelectorAll('.inputDet')
     let id_e= document.getElementById('id_examen').value
+    const idOrden= document.getElementById('idOrden').value
+//    const ex_estado= document.getElementById('exaEstado')
 
-    inputs.forEach((i)=>{
+const verificar= await fetch(`/cambio_estado/camEstadoValidar/${idOrden}/${id_e}`)
+                const response = await fetch(`/examen/examenes/cambioEstado/ex/${id_e}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                  
+                });
+    await inputs.forEach((i)=>{
          fetch('/guardar-valores',{
             method: 'POST',
             headers: {
@@ -18,13 +31,20 @@ btnGuardar.addEventListener('click', ()=>{
 
             })
         }).then(res=>{
-            if(res.OK){
-                console.log("YES!")
+            if (res.ok) {
+                
+                 window.location.href=`/orden/orden-id/${idOrden}/${rol}`
+                
+            } else {
+                console.error(`Error al actualizar `);
             }
         })
+      
     })
 
 
 
+
+})
 
 })

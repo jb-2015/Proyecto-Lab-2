@@ -19,6 +19,12 @@ const Orden = sequelize.define('orden', {
     allowNull: true,
     defaultValue: null
   },
+  prioridad: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
+    collate: 'utf8mb4_spanish2_ci'
+  },
   estado: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -26,6 +32,11 @@ const Orden = sequelize.define('orden', {
     collate: 'utf8mb4_spanish2_ci'
   },
   fecha_creacion: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
+  },
+  fecha_entrega: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null

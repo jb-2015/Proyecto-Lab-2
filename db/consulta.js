@@ -14,9 +14,6 @@ const ValorRef = require('../models/valor_ref');
 const guia_muestra= require('../models/guia_muestra')
 const Registro_valores = require('../models/registro_valores')
 
-ValorRef.belongsTo(Determinacion, { foreignKey: 'id_determinacion', as: 'determinacion' });
-Determinacion.hasMany(ValorRef, { foreignKey: 'id_determinacion', as: 'valorRef' });
-
 Pedido.belongsTo(Persona, { foreignKey: 'id_persona', as: 'persona' });
 Persona.hasOne(Pedido, { foreignKey: 'id_persona', as: 'pedido' });
 
@@ -30,6 +27,9 @@ Analisis.hasMany(Orden, { foreignKey: 'id_analisis', as: 'orden' });
 
 Analisis.hasMany(guia_muestra, { foreignKey: 'id_analisis', as: 'guia_muestra' });
 
+Muestra.belongsTo(guia_muestra, { foreignKey: 'id_guiaM', as: 'guia_muestra' });
+
+guia_muestra.belongsTo(Analisis, { foreignKey: 'id_analisis', as: 'analisis' });
 
 Muestra.belongsTo(Orden, { foreignKey: 'id_orden', as: 'orden' });
 Orden.hasOne(Muestra, { foreignKey: 'id_orden', as: 'muestra' });
@@ -47,16 +47,24 @@ Orden.hasMany(CambioEstado, { foreignKey: 'id_orden', as: 'cambioEstado'  });
 CambioEstado.belongsTo(Estado, { foreignKey: 'id_estado', as: 'estado'  });
 Estado.hasMany(CambioEstado, { foreignKey: 'id_estado', as: 'cambio_estado'  });
 
+CambioEstado.belongsTo(Examen, { foreignKey: 'id_examen', as: 'examen'  });
+Examen.hasMany(CambioEstado, { foreignKey: 'id_examen', as: 'cambio_estado'  });
+
+
 Examen.belongsTo(Analisis,{foreignKey:'id_analisis', as: 'analisis'})
 Analisis.hasMany(Examen,{foreignKey:'id_analisis', as: 'examen'})
 
 Registro_valores.belongsTo(Examen,{foreignKey:'id_examen', as: 'examen'})
 Examen.hasMany(Registro_valores,{foreignKey:'id_examen', as: 'examen'})
 
-Muestra.belongsTo(guia_muestra,{foreignKey:'id_guiaM', as: 'guia_muestra'})
-guia_muestra.hasMany(Muestra,{foreignKey:'id_guiaM', as: 'muetra'})
+Registro_valores.belongsTo(Determinacion,{foreignKey:'id_determinacion', as: 'determinacion'})
+Determinacion.hasOne(Registro_valores, { foreignKey: 'id_determinacion', as: 'determinacion'  });
 
 
+ValorRef.belongsTo(Determinacion, { foreignKey: 'id_determinacion', as: 'determinacion' });
+//Determinacion.hasMany(ValorRef, { foreignKey: 'id_determinacion', as: 'determinacion' });
+
+  
   
 module.exports = {
    

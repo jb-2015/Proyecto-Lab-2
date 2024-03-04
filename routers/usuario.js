@@ -3,53 +3,58 @@ const router = express.Router();
 //const connection= require('../config/database')
 const bcryptjs= require('bcryptjs')
 const usuarioController = require('../controllers/usuarioController');
+  // Utiliza el middleware requireAuth en tus rutas protegidas
+
+  const { validarAutenticacion, handleErrorValidations } = require('../middleware/validateUser');
+  const authMiddleware = require('../middleware/authMiddleware');
+
 
 router.get('/formularioUsuario', (req, res) => {
     res.render('usuarioForm');
 });
+router.get('/reseteo_password',(req, res) => {
+    res.render('reset-password-request'); // Ajusta el nombre de la vista según tu configuración
+  });
+
+router.post('/request-reset-password', usuarioController.requestResetPassword);
 
 
-  // Utiliza el middleware requireAuth en tus rutas protegidas
+  router.get('/reset_password/:resetToken',(req, res) => {
+    const resetToken = req.params.resetToken; // Obtén el token de la URL
+    res.render('reset-password', { resetToken }); // Ajusta el nombre de la vista según tu configuración
+  });
 
-  const { body, validationResult } = require('express-validator');
-
+router.post('/resete_password', usuarioController.resetPassword);
 
   // A partir de aquí, puedes definir tus rutas normales
   
 
-  router.post('/auth', [
-    body('dni').notEmpty().isNumeric().isLength({ min: 8 }).withMessage('Ingrese dni valido'),
-    body('clave').notEmpty().isLength({ min: 6 }).withMessage('Ingrese una clave valida')
-], async (req, res) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return res.json({
-            ok: false,
-            error: 'Error de validación',
-            errores: errores.array()
-        });
-    }
-
+  router.post('/auth', validarAutenticacion, handleErrorValidations, async (req, res) => {
+   
         try {
         const { dni, clave } = req.body;
 
-        const usuario = await usuarioController.buscarDni(dni);
+        let usuario;
 
-        if (!usuario) {
-            res.json({
+            usuario = await usuarioController.buscarDni(dni);
+    
+        if (usuario === null) {
+
+           return res.json({
                 ok: false,
-                error: "Usuario y/o Contraseña h incorrectos"
+
+                error: "Documento no esta registrado"
               
             });
 
-        }
+        }else{
 
         const esClaveValida = await bcryptjs.compare(clave.toString(), usuario.clave);
 
         if (!esClaveValida) {
             res.json({
                 ok: false,
-                error: "Usuario y/o Contraseña jj incorrectos"
+                error: "Contraseña incorrecta"
             });
             return;
         }
@@ -57,50 +62,46 @@ router.get('/formularioUsuario', (req, res) => {
         req.session.user = usuario.id_usuario;
 console.log(usuario.rol)
         
-		if (usuario.rol === 'paciente') {
+		if (usuario.rol === 'Paciente') {
 			res.json({
 				ok: true,
 				//redirectTo: ''
                 rol: usuario.rol
 			});
-		} else if (usuario.rol === 'administrativo') {
+		} else if (usuario.rol === 'Administrador' && usuario.estado != 0) {
 			res.json({
 				ok: true,
                 redirectTo: `/page-${usuario.rol}`,
                 rol: usuario.rol
 			});
-		}else if (usuario.rol === 'tecnico') {
+		}else if (usuario.rol === 'Tecnico' && usuario.estado != 0) {
 			res.json({
 				ok: true,
 				redirectTo: `/page-${usuario.rol}`
 			});
-		}else if (usuario.rol === 'bioquimico') {
+		}else if (usuario.rol === 'Bioquimico'&& usuario.estado != 0) {
+			res.json({
+				ok: true,
+				redirectTo: `/page-${usuario.rol}`
+			});
+		}else if (usuario.rol === 'Gerente'&& usuario.estado != 0) {
 			res.json({
 				ok: true,
 				redirectTo: `/page-${usuario.rol}`
 			});
 		}
+    }
     } catch (error) {
         console.error(error);
-        res.json({
+        return res.json({
             ok: false,
             error: "Error en el servidor"
         });
     }
 });
 
-router.post('/pacienTe', [
-    body('dni').notEmpty().isNumeric().isLength({ min: 8 }).withMessage('Ingrese dni valido'),
-    body('clave').notEmpty().isLength({ min: 6 }).withMessage('Ingrese una clave valida')
-], async (req, res) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return res.json({
-            ok: false,
-            error: 'Error de validación',
-            errores: errores.array()
-        });
-    }
+router.post('/pacienTe', validarAutenticacion, handleErrorValidations, async (req, res) => {
+    
     const { dni, clave } = req.body;
 
     try {
@@ -123,25 +124,30 @@ router.post('/pacienTe', [
             });
             return;
         }
-		if (usuario.rol === 'paciente') {
+		if (usuario.rol === 'Paciente') {
 			res.json({
 				ok: true,
 				redirectTo: `/page-${usuario.rol}`
 			});
-		} else if (usuario.rol === 'administrativo') {
+		} else if (usuario.rol === 'Administrador') {
 			res.json({
 				ok: true,
 				//redirectTo: '/page-administrativo'
 			});
-		}else if (usuario.rol === 'tecnico') {
+		}else if (usuario.rol === 'Técnico') {
 			res.json({
 				ok: true,
 			//	redirectTo: '/page-Tecnico'
 			});
-		}else if (usuario.rol === 'bioquimico') {
+		}else if (usuario.rol === 'Bioquímico') {
 			res.json({
 				ok: true,
 				//redirectTo: '/page-bioquim'
+			});
+		}else if (usuario.rol === 'Gerente') {
+			res.json({
+				ok: true,
+				//redirectTo: `/page-${usuario.rol}`
 			});
 		}
     } catch (error) {
@@ -154,14 +160,17 @@ router.post('/pacienTe', [
 });
 
 
-router.get('/', usuarioController.list);
-router.get('/:id', usuarioController.getById);
+router.get('/', authMiddleware.requireAuth, usuarioController.list);
+router.get('/:id', authMiddleware.requireAuth, usuarioController.getById);
 
 
-router.post('/guardarUsuario',usuarioController.saveUser);
-router.get('/busqDni/:dni', usuarioController.buscarDni)
-
-
+router.post('/guardarUsuario' , authMiddleware.requireAuth, usuarioController.saveUser);
+router.get('/busqDni/:dni', authMiddleware.requireAuth, usuarioController.buscarDni)
+router.get('/tabla_Empleado/empleado' , authMiddleware.requireAuth ,  usuarioController.tablaEmpleado)
+router.get('/listaPaciente/userPa/:rol' , authMiddleware.requireAuth,  usuarioController.listPaciente)
+router.get('/cambioAlta/user/:dni' , authMiddleware.requireAuth, usuarioController.btnAlta);
+router.get('/cambioBaja/user/:dni', authMiddleware.requireAuth , usuarioController.btnBaja);
+router.get('/modificarRol/user/:dni/:rol', authMiddleware.requireAuth, usuarioController.modificarRol);
 
 /*
 router.put('/campos', [

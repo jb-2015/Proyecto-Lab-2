@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
     <%- include('imports/imports')%>
     <title></title>
+  
+
 </head>
 <body>
     <header>
@@ -13,24 +17,165 @@
     </header>
     <main>
         <div class="tContainer">
-            <%  orden.dataValues.examen.forEach(e=>{ %>
-            <div class="r">
+            <% let contBtn=0;%>
+            <% var idExamenesArray = []; %>
+            <%if(examen.length == 0){%>
                 <div class="c4 f-column border-on">
-                    <div class="r border-on">
+                    <div class="r border-on"  style="background-color: rgb(240, 239, 239);">
+                       
+                  
                         <div class="c2"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
                         <div class="c1"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
                         <div class="c1"> <h2><%= orden.fecha_creacion %> </h2></div>
+                        
+                        <h1>Si no hay examen, cancele la orden.</h1>
+             
+                        <input type="hidden" id="idOrden" value="<%=orden.id_orden%>">
+                        <input type="hidden"  id="dni" value="<%=orden.pedido.persona.dni%>">
+                        <input type="hidden" id="rol" value="<%=rol%>">
+                        <input type="hidden" id="id_persona" value="<%= orden.pedido.persona.id_persona%>">
                     </div>
                     <div class="r">
                        <div class="c4 f-column">
-                            <h1> <%= e.analisis.descripcion %> </h1>
-                            <h3> Estado de Orden: <%= orden.cambioEstado[0].estado.nombre %></h3>
+                            <h1> Agregar Análisis </h1>
+                            <h3> Estado de Orden: null</h3>
+                          
                             <h4>Muestras:</h4>
                             <ul>
-                                <% muestras.forEach(m=>{
+                             
+                                        
+                                    <li> Agregar Muestras</li>
+                         
+                               <!-- <% muestras.forEach(m=>{
                                     %>
-                                    <li class="<% if(!m.entregado){ %> t-red <% }%>"> <%= m.guia_muestra.g_descripcion %></li>
+                                        <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.guia_muestra.g_descripcion %></li>
                                     <%
+                                })%>      -->
+                            </ul>
+                            
+                       </div>
+                    </div>
+                    <div class="r border-on ">
+                        <div class="c1">
+                            <h3><strong>Análisis: </strong> </h3>
+                            <ul>
+                  
+                                    
+                                    <li> Agregar Análisis</li>
+                               
+                               
+                            </ul>
+                        </div>
+                     
+
+
+                         
+                            
+                        <div class="c1">
+                            
+                              
+                          
+                                <h3>Medico: </h3>
+                           
+                            <ul> 
+                               <li>Nombre:  
+                               
+                                   <%= orden.pedido.nombre_medico %>
+                                </li>
+                                <li>
+                                  Matricula N°:   <%= orden.pedido.nro_matricula %>
+                                </li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="r">
+                <% if(rol == 'Administrador'){
+                    %>                              
+                      
+                 
+                    <div class="c1"><button id="btnActualizar">Actualizar</button></div>
+                    <div class="c1"><button>Cancelar Orden</button></div>
+                    <%
+                }%>
+              
+                
+            </div>
+            <!--/////////////////////////////////////////////////////////////////////////////////////////////-->
+                <%} else {%>
+                    
+            <% for (let i = 0; i < examen.length; i++) { %>
+                
+            <%contBtn++;%>
+                <% const e = examen[i]; %>
+                <% const m = muestras[i]; %>
+
+
+                <% if(rol === 'Administrador'){
+                    %>  
+                  
+            <div class="r">
+                <div class="c4 f-column border-on" style="background-color: rgb(240, 239, 239);">
+                 
+                     <div class="r border-on">   
+                       <%if(i == 0){%>
+                       
+                        <div class="c2" style="width: auto;"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
+                        <div class="c1" style="width: auto;"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
+                        <div class="c1" style="width: auto;"> <h2>Fecha de Inicio: <%= orden.fecha_creacion.toISOString().slice(0,10)   %> </h2></div>
+                        <div class="c4" style="padding-left: 50px;"> <h2>Edad: <%= orden.pedido.persona.dataValues.edad %></h2> </div>
+                       
+                        <div class="c4" style=" display: flex; justify-content: space-between;"> 
+                             <h2 style="padding-left: 45px; width: 350px;"> Estado de Orden: <%= ultimoCambioOrden.estado.nombre %></h2>
+                         
+                        
+                        <%if(orden.prioridad){%>
+                            <label 
+                                style="color:white;font-size: 30px; background-color: brown; width: 300px; height: 35px;;text-align: center;border: 3px solid black; border-radius: 10px;">Pedido
+                                URGENTE</label>
+                            <%}%>
+                                <h2 style="padding-right: 45px;">Fecha de Entrega: <%= orden.fecha_entrega.toISOString().slice(0,10)   %> </h2>
+                    </div>
+
+                      <%}%>
+                 
+                      <input type="hidden" id="cancelarOrden" value="<%=orden.estado%>">
+                        <input type="hidden" id="idOrden" value="<%=orden.id_orden%>">
+                        <input type="hidden" id="id_examen" value="<%=e.id_examen%>">
+                        <% idExamenesArray.push(examen[i].id_examen); %>
+                         
+                        <input type="hidden" id="rol" value="<%=rol%>">
+                        <input type="hidden" id="id_persona" value="<%= orden.pedido.persona.id_persona%>">
+                        <input type="hidden"  id="dni" value="<%=orden.pedido.persona.dni%>">
+                        <input type="hidden"  id="nombre_<%=e.id_examen %>" value="<%=orden.pedido.persona.nombre%>">
+                        <input type="hidden"  id="apellido_<%=e.id_examen %>" value="<%=orden.pedido.persona.apellido%>">
+                        <input type="hidden" id="sexo" value="<%= orden.pedido.persona.genero%>">
+                    
+                      </div>
+   <input type="hidden"  id="analisis_<%=e.id_examen %>" value="<%=e.analisis.descripcion%>">
+                            <input type="hidden"  id="ite" value="<%=i%>"> 
+                    <div class="r">
+                       <div class="c4 f-column">
+                        <label style="font-size: 20px;">Análisis:
+                            <h2> <%= e.analisis.descripcion %> </h2></label>
+                         
+                           <!--     <h3> Estado de Orden: <%= resOrd[i].ultimoCambio.estado.nombre %></h3>-->
+                        
+                            <label style="font-size: 20px;">Muestras:</label>
+                            <ul>
+                                <% muestras.forEach(m=>{
+                                 
+                                    %>
+                                       <%if(e.analisis.id_analisis === m.guia_muestra.id_analisis){%>
+                                        
+                                    <li class="<% if(!m.entregado){ %> t-red <% }%>" style="font-size: 20px;"> <h3><%= m.guia_muestra.g_descripcion %></h3></li>
+                                     <%}%>
+                                    <%
+
+                                  
                                 })
                                     
                              %>
@@ -44,32 +189,80 @@
                        </div>
                     </div>
                     <div class="r border-on ">
-                        <div class="c2">
-                            <h3><strong>Analisis: </strong> </h3>
+                        <div class="c1">
+                            <h3><strong>Análisis: </strong> </h3>
                             <ul>
-                                <% orden.dataValues.examen.forEach(ex=>{%>
+                                <% examen.forEach(ex=>{%>
+                                    
                                     <li> <%= ex.analisis.descripcion %> </li>
+                               
                                 <% }) %>
                             </ul>
                         </div>
-                        <div class="c2">
-                            <h3>Tipo: </h3>
+                       
+                        <div class="c1 f-column">
+                        <% if(orden.estado){%> 
+                              
+                            <button>
+                               
+                                <a href="/determinacion/paraValidar/<%= e.id_examen %>/<%= orden.pedido.persona.genero %>/<%=orden.id_orden%>/<%=rol%>">
+                                    Ver Resultado</a>
+                                </button>
+                                
+                                    <input type="hidden"  id="exalength" value="<%=e.id_examen %>"> 
+                                    <button class="btnEtiqueta" value="<%=e.id_examen %>">Etiqueta</button> 
+                      
+                                    
+                                
+                        <%}else{%>
+
+<h3 style="text-align: center; background-color: rgba(231, 88, 88, 0.74); border-radius: 10px; border: solid rgb(228, 115, 115);">La orden fue cancelada, para realizar acciones se requiere su activación.</h3>
+                            <%}%>
+</div>
+                         
+                            
+                        <div class="c1">
+                            
+                              
+                          
+                                <h3>Medico: </h3>
+                           
+                            <ul> 
+                               <li>Nombre:  
+                               
+                                   <%= orden.pedido.nombre_medico %>
+                                </li>
+                                <li>
+                                  Matricula N°:   <%= orden.pedido.nro_matricula %>
+                                </li>
+                            </ul>
+                            
                         </div>
                     </div>
                     
                 </div>
             </div>
             <div class="r">
-                <% if(rol == 'tecnico'){
-                    %>
-                    <div class="c1"><button><a href="/registrar-valores/<%= e.id_examen %>">Registrar Valores</a></button></div>
-                    <div class="c1"><button>Para validar</button></div>
-                    <div class="c1"><button></button></div>
-                    <div class="c1"><button></button></div>
-                    <%
-                }
-                if(rol=='bioquimico'){
-                    %>
+                <% if(rol == 'Administrador' && contBtn == examen.length){
+                    %>                              
+                    <% if(orden.estado){%>      
+                    <% if( ultimoCambioOrden.id_estado ===1 || ultimoCambioOrden.id_estado === 2){%>      
+                    <div class="c1"><button id="btnActualizar">Actualizar</button></div>
+                    <%} else {%>
+                        <div class="c1"><button id="btnActualizar" disabled>Actualizar</button></div>
+<%}%>
+
+<% if( ultimoCambioOrden.id_estado === 5){%>
+<div class="c1"><button id="btnOrdTerminada">Orden Terminada</button></div>
+<%}%>
+                    <div class="c1"><button id="btnCancelar">Cancelar Orden</button></div>
+                    <%}else{%>
+                        <div class="c1"><button id="btnCancelar">Activar Orden</button></div>
+                        <%}%>
+
+              <%} else if(rol=='bioquimico'){%>
+                
+                    
                     <div class="c1"><button>Validar</button></div>
                     <div class="c1"><button>Verificar</button></div>
                     <div class="c1"><button></button></div>
@@ -79,9 +272,161 @@
                 %>
                 
             </div>
-            <% }) %>
+           <!--//////////////////////////////////////  T . E . C . N . I . C . O  ///////////////////////////////////////-->
+            <% } else if(rol == 'Tecnico'){ %>
+                <%let verificar= true;%>
+             <%if(resOrd[i].ultimoCambio.id_estado === 2){%>
+     <div class="r">
+                <div class="c4 f-column border-on" style="background-color: rgb(240, 239, 239);">
+                 
+                     <div class="r border-on">   
+                       <%if(verificar){%>
+                       
+                        <div class="c2" style="width: auto;"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
+                        <div class="c1" style="width: auto;"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
+                        <div class="c1" style="width: auto;"> <h2>Fecha de Inicio: <%= orden.fecha_creacion.toISOString().slice(0,10)   %> </h2></div>
+                        <div class="c4" style="padding-left: 50px;"> <h2>Edad: <%= orden.pedido.persona.dataValues.edad %></h2> </div>
+                       
+                        <div class="c4" style=" display: flex; justify-content: space-between;"> 
+                             <h2 style="padding-left: 45px; width: 350px;"> Estado de Orden: <%= ultimoCambioOrden.estado.nombre %></h2>
+                         
+                        
+                        <%if(orden.prioridad){%>
+                            <label 
+                                style="color:white;font-size: 30px; background-color: brown; width: 300px; height: 35px;;text-align: center;border: 3px solid black; border-radius: 10px;">Pedido
+                                URGENTE</label>
+                            <%}%>
+                                <h2 style="padding-right: 45px;">Fecha de Entrega: <%= orden.fecha_entrega.toISOString().slice(0,10)   %> </h2>
+                    </div>
+                    <%verificar= false;%>
+                      <%}%>
+                 
+                      <input type="hidden" id="cancelarOrden" value="<%=orden.estado%>">
+                        <input type="hidden" id="idOrden" value="<%=orden.id_orden%>">
+                        <input type="hidden" id="id_examen" value="<%=e.id_examen%>">
+                        <input type="hidden" id="rol" value="<%=rol%>">
+                        <input type="hidden" id="id_persona" value="<%= orden.pedido.persona.id_persona%>">
+                        <input type="hidden"  id="dni" value="<%=orden.pedido.persona.dni%>">
+                        <input type="hidden"  id="nombre_<%=e.id_examen %>" value="<%=orden.pedido.persona.nombre%>">
+                        <input type="hidden"  id="apellido_<%=e.id_examen %>" value="<%=orden.pedido.persona.apellido%>">
+                     
+                    
+                      </div>
+   <input type="hidden"  id="analisis_<%=e.id_examen %>" value="<%=e.analisis.descripcion%>">
+                            <input type="hidden"  id="ite" value="<%=i%>"> 
+                    <div class="r">
+                       <div class="c4 f-column">
+                        <label style="font-size: 20px;">Análisis:
+                            <h2> <%= e.analisis.descripcion %> </h2></label>
+                         
+                           <!--     <h3> Estado de Orden: <%= resOrd[i].ultimoCambio.estado.nombre %></h3>-->
+                        
+                            <label style="font-size: 20px;">Muestras:</label>
+                            <ul>
+                                <% muestras.forEach(m=>{
+                                 
+                                    %>
+                                       <%if(e.analisis.id_analisis === m.guia_muestra.id_analisis){%>
+                                        
+                                    <li class="<% if(!m.entregado){ %> t-red <% }%>" style="font-size: 20px;"> <h3><%= m.guia_muestra.g_descripcion %></h3></li>
+                                     <%}%>
+                                    <%
+
+                                  
+                                })
+                                    
+                             %>
+                               <!-- <% muestras.forEach(m=>{
+                                    %>
+                                        <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.guia_muestra.g_descripcion %></li>
+                                    <%
+                                })%>      -->
+                            </ul>
+                            
+                       </div>
+                    </div>
+                    <div class="r border-on ">
+                        <div class="c1">
+                            <h3><strong>Análisis: </strong> </h3>
+                            <ul>
+                                <% examen.forEach(ex=>{%>
+                                    
+                                    <li> <%= ex.analisis.descripcion %> </li>
+                               
+                                <% }) %>
+                            </ul>
+                        </div>
+                       
+                        <div class="c1 f-column">
+                        <% if(orden.estado){%>          
+                           
+                                
+                                    <input type="hidden"  id="exalength" value="<%=e.id_examen %>"> 
+                                    <button class="btnEtiqueta" value="<%=e.id_examen %>">Etiqueta</button> 
+                      
+                                    
+                                
+                        <%}else{%>
+
+<h3 style="text-align: center; background-color: rgba(231, 88, 88, 0.74); border-radius: 10px; border: solid rgb(228, 115, 115);">La orden fue cancelada, para realizar acciones se requiere su activación.</h3>
+                            <%}%>
+</div>
+                         
+                            
+                        <div class="c1">
+                            
+                              
+                          
+                                <h3>Medico: </h3>
+                           
+                            <ul> 
+                               <li>Nombre:  
+                               
+                                   <%= orden.pedido.nombre_medico %>
+                                </li>
+                                <li>
+                                  Matricula N°:   <%= orden.pedido.nro_matricula %>
+                                </li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        <div class="r">
+            <% if(rol == 'Tecnico'){
+                %>
+                <div class="c1"><button><a href="/registrar-valores/<%= e.id_examen %>/<%= orden.pedido.persona.genero %>/<%= rol %>">Registrar Valores</a></button></div>
+                <div class="c1"><button id="btnParaValidar">Validar</button></div>
+                <div class="c1"><button id="btnActualizar">Actualizar</button></div>
+                <div class="c1"><button></button></div>
+                <%
+            }
+            if(rol=='Bioquimico'){
+                %>
+                <div class="c1"><button>Validar</button></div>
+                <div class="c1"><button>Verificar</button></div>
+                <div class="c1"><button></button></div>
+                <div class="c1"><button></button></div>
+                <%
+            }
+            %>
+            
+        </div>
+     
+        <% } %>
+            <%}%>
+            <% } %>
+
+            <% } %>
+         
         </div>
     </main>
     <footer></footer>
+    
+    <script type="text/javascript" src="/js/cambioEstadoParavalidar.js"></script>
+
+    
 </body>
 </html>

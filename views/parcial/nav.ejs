@@ -13,15 +13,11 @@
 <div class="c2 f-row" id="menu-nav">
 	<% if(menu){%>
 		<ul class="f-row">
-			<% if(tipoUser == 'administrativo'){
+			<% if(tipoUser == 'Administrador'){
 				%>
-				<a href="/page-administrativo">
-					<li>Buscar</li>
-				</a>
-				<%
-			} %>
-			<a href="/cerrar-sesion">
-				<li>Cerrar sesion</li>
+				<li class="nav-item"><a href="/page-Administrador">Buscar</a></li>
+				<% } %>
+				<li class="nav-item"><a href="/cerrar-sesion">Cerrar sesión</a></li>
 				
 			</a>
 			<a href="#">

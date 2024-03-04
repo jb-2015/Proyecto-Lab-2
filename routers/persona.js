@@ -3,63 +3,30 @@ const router = express.Router();
 
 
 const personaController = require('../controllers/personaController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 
+router.use(authMiddleware.checkIncognito);
 
-const session =require('express-session')
-router.use(session({
-	secret: 'secret',
-	resave: false,
-    saveUninitialized: true,
-    
-}))
-function requireAuth(req, res, next) {
-  if (req.session && req.session.user) {
-    return next(); 
-  }
-  res.redirect('/portal-personal');
-}
-
-
-
-
-function checkIncognito(req, res, next) {
-    const userAgent = req.headers['user-agent'];
-    const isIncognito = /\/Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-  
-    if (isIncognito) {
-        req.session.destroy(); 
-     
-      } 
-        next(); 
-  }
-  
- 
-  router.use(checkIncognito);
-
-
-
-
-
-
-
-router.get('/', personaController.list);
-router.put('/update/:id', personaController.update);
-router.put('/create', personaController.create);
-router.get('/remove/:id', personaController.remove);
-router.get('/id/:id', personaController.findById);
+router.get('/',authMiddleware.requireAuth, personaController.list);
+router.put('/update/:id',authMiddleware.requireAuth, personaController.update);
+router.put('/perso/:dni',authMiddleware.requireAuth, personaController.updateDni);
+router.put('/create',authMiddleware.requireAuth, personaController.create);
+router.get('/remove/:id',authMiddleware.requireAuth, personaController.remove);
+router.get('/id/:id',authMiddleware.requireAuth, personaController.findById);
 router.get('/urldni/:dni', personaController.findByDni);
-router.get('/nombre/:nombre', personaController.findByNombre);
+router.get('/nombre/:nombre',authMiddleware.requireAuth, personaController.findByNombre);
 
-router.get('/apellido/:apellido', personaController.findByApellido);
-router.get('/email/:email', personaController.findByEmail);
-router.get('/cantidad', personaController.obtenerCantidadTotal);
-router.get('/per', personaController.obtenerDatosPersonasConOrdenes);
-router.get('/nueva', (req, res) => {
-    res.render('createPaciente');
+router.get('/apellido/:apellido',authMiddleware.requireAuth, personaController.findByApellido);
+router.get('/email/:email',authMiddleware.requireAuth, personaController.findByEmail);
+router.get('/cantidad',authMiddleware.requireAuth, personaController.obtenerCantidadTotal);
+router.get('/per', authMiddleware.requireAuth,personaController.obtenerDatosPersonasConOrdenes);
+router.get('/nueva/:rol', authMiddleware.requireAuth, (req, res) => {
+    const {role} = req.params
+    res.render('createPaciente',rol);
 });
 
-router.get('/tabla', personaController.tabla);
+router.get('/tabla', authMiddleware.requireAuth,personaController.tabla);
 //router.get('/dni/:dni', personaController.findByDni);
 /*
 router.post("/panel-paciente",async (req,res)=>{
@@ -78,6 +45,7 @@ router.post("/panel-paciente",async (req,res)=>{
 })
 */
 
-router.get('/panel-te/:dni',requireAuth, personaController.renderDni);
+router.get('/panel-te/:dni/:rol',authMiddleware.requireAuth,personaController.renderDni);
 
+router.get('/porEmail/userEmail/:email',authMiddleware.requireAuth,personaController.renderEmail);
 module.exports = router;

@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:true, tipoUser: 'administrativo'})%>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Datos Paciente', menu:true, tipoUser: rol})%>
     </header>
     <main>
         <div class="tContainer">
@@ -21,6 +21,7 @@
                             <div class="r">
                                 <div class="c3 f-column">
                                     <h2>Datos del Paciente</h2>
+                                    <input type="hidden" id="rol" value="<%=rol%>">
                                     <form action="" id="frm-datos-paciente" class="f-column">
                                         <input type="hidden" id="id_persona" value="<%= persona.id_persona %>">
                                         <input type="text" id="nombre" value="<%= persona.nombre %>">
@@ -62,30 +63,67 @@
                 <div class="c4 f-column">
                     <div class="r">
                         <div class="c1"><h2>Ordenes del paciente</h2></div>
-                        <div class="c1"><a href="/page-create-orden/<%= persona.id_persona %>"><button>Crear Orden</button></a></div>
+                        <div class="c1"><a href="/page-create-orden/<%= persona.id_persona %>/<%=rol%>"><button>Crear Orden</button></a></div>
                         <div class="c1"></div>
                         <div class="c1"></div>
                     </div>
-                    
+                    <%let cont=0;%>
+                    <%let contExa=0;%>
                         <%
                         ordenes.forEach(o=>{
                             %>
                             <div class="r">
-                                <div class="ordenItem f-row">
+                                <div class="ordenItem f-row" style=" display: flex; justify-content: space-between;">
                                     
-                                    <span class="c1"><%= %></span>
-                                    <span class="c1"> <%= o.cambioEstado[0].estado.nombre  %> </span>
-                                    <span class="c1"><%=  o.fecha_creacion  %></span>
-                                    <span class="c1 f-row">
-                                        <a href="/orden/orden-id/<%= o.id_orden%>"><img src="/images/ver.png" alt=""></a>
-                                        <a href=""><img src="/images/print.png" alt=""></a>
+                                  
+                              
+                                        <!-- El arreglo o.cambioEstado no está vacío -->
+                                        <span class="c1 r f-column">  <% if(resOrd[cont].ultimoCambio && o.id_orden === resOrd[cont].ultimoCambio.id_orden) { %>
+                                            <%= resOrd[cont].ultimoCambio.estado.nombre %>
+                                        <% } %></span> 
+                                      
+                                 <span class="c1 r f-column">
+                             <%examen.forEach(ex=>{%>
+                                <%if(o.id_orden === ex.id_orden){%>
+                                  
+                                    <% if(resOrd2[contExa].ultimoCambioExa.id_estado === 5) { %>
+                                        <div class="r"> <strong style="color: limegreen;"><%= ex.analisis.descripcion%></strong></div>
+                                        
+                                        <%} else if(resOrd2[contExa].ultimoCambioExa.id_estado === 4) { %>
+    <div class="r"> <strong style="color: rgb(190, 205, 50);"><%= ex.analisis.descripcion%></strong></div>
+    <%} else if(resOrd2[contExa].ultimoCambioExa.id_estado === 3) { %>
+        <div class="r"> <strong style="color: rgb(170, 120, 11);"> <%= ex.analisis.descripcion%></strong></div>
+        <%} else if(resOrd2[contExa].ultimoCambioExa.id_estado === 2) { %>
+            <div class="r"> <strong style="color: rgb(192, 99, 56);"> <%= ex.analisis.descripcion%></strong></div>
+            <%} else if(resOrd2[contExa].ultimoCambioExa.id_estado === 1) { %>
+                <div class="r"> <strong style="color: rgb(224, 34, 21);"> <%= ex.analisis.descripcion%></strong></div>
+                <%} %>                                        
+<%}%>  
+    <%contExa++;%>
+                                <%})%>
+                                 </span> 
+                                    <%if(o.estado){%>
+                                       <span class="c1 r f-column"><%=  o.fecha_creacion  %></span>    
+                                    <span class="c1 r f-row" >
+                                        
+                                        <a href="/orden/orden-id/<%= o.id_orden%>/<%=rol%>"><img src="/images/ver.png" alt=""></a>
+                                       
+                                        <a href="" ><img src="/images/print.png" alt=""></a>
                                         <a href=""><img src="/images/pdf.png" alt=""></a>
                                     </span>
-                                    
+                                     <%  } else {%>
+                                         <h2 style="width: 150px; font-size: 15px;color:white; background-color: brown;text-align: center;border: 3px solid black; border-radius: 10px;">Orden Cancelada</h2>
+                                        <span class="c1 r f-row">
+                                           
+                                            <a href="/orden/orden-id/<%= o.id_orden%>/<%=rol%>"><img src="/images/ver.png" alt=""></a>
+                                            </span>
+                                            <%}%>
                                 </div>
                             </div>
-                            
+                             <%cont++;%>
+                             <%contExa=0;%>
                             <%
+                           
                         })
                     %>
                    
@@ -98,9 +136,7 @@
         </div>
     </main>
     <script type="module" src="/js/actualizarPaciente.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <footer></footer>
 
 </body>

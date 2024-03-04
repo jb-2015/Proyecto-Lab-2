@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <%- include('parcial/nav',{logo:true,titulo:true,value:"Registrar Orden",menu:true, tipoUser:'administrativo'})%>
+        <%- include('parcial/nav',{logo:true,titulo:true,value:"Registrar Orden",menu:true, tipoUser:rol})%>
     </header>
     <main>
         <div class="tContainer">
@@ -18,7 +18,7 @@
                     <div class="r">
                         <div class="c4">
                             <div class="r">
-
+                                <input type="hidden" id="rol" value="<%=rol%>">
                                 <div class="c2"> <h2>Paciente:  </h2> <h3><%= person.persona.nombre+" "+person.persona.apellido %></h3> </div>
                                 <div class="c2"> <h2>DNI:</h2> <h3><%= person.persona.dni %></h3> </div>
                             </div>
@@ -29,7 +29,7 @@
                         <div class="c4 f-column">
 
                             <div class="r">                            
-                                    <label>Pedido</label>                                               
+                                    <label style="font-size: 20px;">Pedido</label>                                               
                             </div>
                             <div class="r">
                                 <input type="text" id="diagnostico" placeholder="Diagnostico" >
@@ -42,7 +42,7 @@
                                 <div class="r"><input type="text" id="nombre_medico" placeholder="Nombre Medico"></div>
                                 <div class="r"><input type="text" id="nro_matricula" placeholder="Nº Matricula"></div>
         
-                                <label for="analisisList">Elegir Analisis</label>
+                                <label for="analisisList" style="font-size: 20px;">Elegir Analisis</label>
                                 <select name="analisisList" id="analisisList">
                                     <option value="">-- Seleccione analisis --</option>
                                     <% listAnalisis.forEach(a=>{
@@ -60,18 +60,25 @@
                             <div class="r">
                                 <div class="c4">
                                     <ul id="muestrasSolicitadas">
-                                        
+                                    
                                     </ul>
                                 </div>
                             </div>
+                            <label for="" style="font-size: 20px;">Fecha Inicio</label>
                             <div class="r"><input id="fecha_creacion" type="date"> </div>
+                            <label for="" style="font-size: 20px;">Fecha de Entrega</label>
+                            <div class="r"><input id="fecha_entrega" type="date"> </div>
+                            <label for=""style="font-size: 25px; background: rgba(255, 0, 0, 0.5); width: 170px; border: 3px solid black; border-radius: 10px;" >Prioridad?
+                            <label for="" style="font-size: 25px;">Si<input type="checkbox" id="prioridad"></label></label>
+                           
+                            <!-- 
                             <select name="estado_orden" id="estado_orden">
                                 <% estados.forEach(e=>{
                                     %> <option value="<%= e.id_estado %>"><%= e.nombre %></option> <%
                                 }) %>
-                            </select>
+                            </select>--> 
                             <button id="btncrear"> Crear</button>
-    
+                            <button id="btnJugar"> jugar</button>
                         </div>
                     </div>
                 </div>
@@ -79,5 +86,6 @@
         </div>
     </main>
     <footer></footer>
+    <script type="module" src="/js/crearOrden.js"></script>
 </body>
 </html>

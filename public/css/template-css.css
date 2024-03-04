@@ -7,6 +7,10 @@ main{
 body{
 	background: url('../images/fondo-gral.jpg');
     background-size: cover;
+	font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
 }
 .tContainer{
 	position: relative;
@@ -16,7 +20,15 @@ body{
 	flex-direction: column;
 	gap:10px;
 }
+.tContainer2{
 
+	position: relative;
+	width: 80%;
+	margin-left: 10%;
+	display: flex;
+	flex-direction: column;
+	gap:10px;
+}
 .r{
 	position: relative;
 	width: 100%;
@@ -40,6 +52,7 @@ body{
 	height: auto;
 	border: var(--border);
 	padding: 5px 0px;
+
 }
 .c3{
 	display: flex;
@@ -55,6 +68,7 @@ body{
 	border: var(--border);
 	padding: 5px 0px;
 }
+
 .f-row{
 	display: flex;
 	flex-direction: row;
@@ -151,7 +165,7 @@ button:hover{
 
 .border-on{
 	border:2px solid black;
-	border-radius: 10px 0 0 10px;
+	border-radius: 10px 10px 10px 10px;
 	
 }
 .border-on2{
@@ -170,3 +184,5 @@ button:hover{
 .t-red{
 	color:red;
 }
+
+

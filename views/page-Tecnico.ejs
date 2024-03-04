@@ -6,50 +6,220 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%- include('imports/imports') %>
     <title>Tecnico</title>
+    <style>
+        .notification-icon {
+    position: relative;
+}
+
+.icon {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.notification-count {
+    position: absolute;
+    top: -10px;
+    left: 270px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0px 5px;
+    
+}
+
+    </style>
 </head>
 <body>
-    <header> <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de Tecnico", menu:true, tipoUser: rol}) %></header>
+    <header> <%- include('parcial/nav',{logo:true,titulo:true, value: "Seccion de "+rol, menu:true, tipoUser: rol}) %></header>
     <main>
         <div class="tContainer">
             <div class="r">
-                <div class="c4">
+                <div class="c2">
                     <h1>Ordenes en estado de Analitica</h1>
+                    
                 </div>
+               
             </div>
+            <%
+            // Ordenar las órdenes por prioridad (las órdenes con prioridad primero)
+            ordenes.sort((a, b) => {
+              if (a.dataValues.prioridad && !b.dataValues.prioridad) {
+                return -1; // a tiene prioridad, debería venir antes
+              } else if (!a.dataValues.prioridad && b.dataValues.prioridad) {
+                return 1; // b tiene prioridad, debería venir antes
+              } else {
+                return 0; // ninguna tiene prioridad o ambas tienen, mantener el orden actual
+              }
+            });
+            %>
+
+
             <div class="r">
                <div class="c4 f-column">
+                <% let contador = 0; %>
+                
+<% ordenes2.forEach(o=>{ %>
+    <% contador++; %>
+                
+                
                 <%
-                ordenes.forEach(o=>{
-                    %>
-                    <div class="r">
-                        <div class="ordenItem f-row">
-                            
+            })
+        %>
+        <div class="notification-icon" id="notificationIcon">
+                    
+            <div class="c1"><button id="btnDevolucion">Devoluciones</button> <span class="icon">&#x1F514;</span></div>  <!-- Este es el emoji de campana (🔔) -->
+            <div class="notification-count" id="notificationCount"><%= contador %></div>
+        </div>
+              
+       
+
+                <% let lastOrderId = null; %>
+                <% ordenes.forEach(o=> { %>
+                 
+                    <div class="r" > 
+                     
+                   <% if (o.id_orden !== lastOrderId) { %>   
+                     <%if(o.dataValues.prioridad){%>
+                        <div class="ordenItem f-row"style="border: red solid;">
+                              <%}else {%>  
+                                <div class="ordenItem f-row">
+                                <%}%>
                             <span class="c1 f-column bg-lightBlue border-on2">
+                                <div class="r "><%= o.dataValues.id_orden %></div>
                                 <div class="r "><%= o.dataValues.dni_persona %></div>
                                 <div class="r"><h3><%= o.dataValues.nombre_persona +" "+ o.dataValues.apellido_persona %></h3></div>
                             </span>
-                            <span class="c1 f-column">
-                                <div class="r"><strong><%= o.dataValues.descripcion%></strong></div>
-                                <div class="r"><%= o.dataValues.est %></div>
+                               
+                           
+                               
+                               
+                            <span class="c1 f-column"> 
+                            
+                                <% ordenes.forEach(or=> { %>
+                                    <% if (or.id_orden == o.id_orden) { %>   
+                                <div class="r"><strong style="color: rgb(8, 50, 189);"><%= or.dataValues.descripcion%></strong></div>
+                                <% } %>
+                                
+                                <% }) %>
+                             
                             </span>
-                            <span class="c1"><%=  o.fecha_creacion  %></span>
+
+                            <span class="c1">
+                                <div class="r" style="color: rgb(5, 255, 5); border-radius: 10px ; font-size: 19px; background-color: rgb(22, 125, 173); width: auto; height: 25px; padding: 5px;"><%= o.dataValues.est %></div>
+                             
+                                    
+                                  </span>
+                            <span class="c1">
+                          
+                            <div class="r">     <%=  o.fecha_creacion  %></div>
+                              
+                            </span>
+                       
                             <span class="c1 f-row">
-                                <a href="/orden/orden-id/<%= o.id_orden%>/tecnico"><img src="/images/ver.png" alt=""></a>
+                                <a href="/orden/orden-id/<%= o.id_orden%>/<%=rol%>"><img src="/images/ver.png" alt=""></a>
                                 <a href=""><img src="/images/print.png" alt=""></a>
                                 <a href=""><img src="/images/pdf.png" alt=""></a>
                             </span>
-                            
+
                         </div>
-                    </div>
+                                          <% } %>      
+                    </div> 
+                    <% lastOrderId = o.id_orden; %>
                     
-                    
-                    <%
-                })
-            %>
+                  
+                 <% }) %>
+           
                </div>
             </div>
         </div>
+<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div class="tContainer2" style="display: none;">
+    <div class="r">
+        <div class="c4">
+            <h1>Ordenes en estado de Pre Informe</h1>
+            
+        </div>
+       
+    </div>
+    <div class="r">
+       <div class="c4 f-column">
+        
+        <input type="hidden" id="rol" value="<%=rol%>">
+            
+            <div class="c1"><button id="btnPrincipal">Pagina Principal</button> </div>  <!-- Este es el emoji de campana (🔔) -->
+            <%
+            // Ordenar las órdenes por prioridad (las órdenes con prioridad primero)
+            ordenes2.sort((a, b) => {
+              if (a.dataValues.prioridad && !b.dataValues.prioridad) {
+                return -1; // a tiene prioridad, debería venir antes
+              } else if (!a.dataValues.prioridad && b.dataValues.prioridad) {
+                return 1; // b tiene prioridad, debería venir antes
+              } else {
+                return 0; // ninguna tiene prioridad o ambas tienen, mantener el orden actual
+              }
+            });
+            %>
+       
+            <% let lastOrderId2 = null; %>
+            <% ordenes2.forEach(ord=> { %>
+             
+                <div class="r">
+               <% if (ord.id_orden !== lastOrderId2) { %>   
+                <%if(ord.dataValues.prioridad){%>
+                    <div class="ordenItem f-row"style="border: red solid;">
+                          <%}else {%>  
+                            <div class="ordenItem f-row">
+                            <%}%>
+                        <span class="c1 f-column bg-lightBlue border-on2">
+                            <div class="r "><%= ord.dataValues.id_orden %></div>
+                            <div class="r "><%= ord.dataValues.dni_persona %></div>
+                            <div class="r"><h3><%= ord.dataValues.nombre_persona +" "+ ord.dataValues.apellido_persona %></h3></div>
+                        </span>
+                           
+                        
+                        <span class="c1 f-column"> 
+                        
+                            <% ordenes2.forEach(orde=> { %>
+                                <% if (orde.id_orden == ord.id_orden) { %>   
+                            <div class="r"><strong style="color: rgb(8, 50, 189);"><%= orde.dataValues.descripcion%></strong></div>
+                            <% } %>
+                            
+                            <% }) %>
+                         
+                        </span>
+
+                        <span class="c1">
+                            <div class="r" style= "color: rgba(255, 196, 0, 0.856);border-radius: 10px ; font-size: 19px; background-color: rgb(22, 125, 173); width: auto; height: 25px; padding: 5px;"><%= ord.dataValues.est %></div>
+                         
+                                
+                              </span>
+                        <span class="c1">
+                      
+                        <div class="r">     <%=  ord.fecha_creacion  %></div>
+                          
+                        </span>
+                   
+                    <span class="c1 f-row">
+                        <a href="/orden/orden-idPreInfo/<%= ord.id_orden%>/<%= rol%>"><img src="/images/ver.png" alt=""></a>
+                        <a href=""><img src="/images/print.png" alt=""></a>
+                        <a href=""><img src="/images/pdf.png" alt=""></a>
+                    </span>
+                    
+                </div>
+                <%
+            }
+        %>
+            </div>
+            
+            <% lastOrderId2 = ord.id_orden; %>
+            <%
+        })
+    %>
+       </div>
+    </div>
+</div>
     </main>
     <footer></footer>
+    <script type="module" src="/js/tecnico.js"></script>
 </body>
 </html>
